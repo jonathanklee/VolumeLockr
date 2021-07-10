@@ -96,7 +96,7 @@ class VolumeService : Service() {
         val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(NOTIFICATION_TITLE)
             .setContentText(NOTIFICATION_DESCRIPTION)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_volumelockr_foreground)
             .build()
 
         startForeground(NOTIFICATION_ID, notification)
