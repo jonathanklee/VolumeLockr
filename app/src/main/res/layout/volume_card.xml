@@ -23,16 +23,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:text="@string/title"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <SeekBar
                 android:id="@+id/seek_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:max="25"/>
+                android:layout_gravity="center"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch1"

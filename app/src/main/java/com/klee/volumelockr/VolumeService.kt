@@ -21,13 +21,15 @@ class VolumeService : Service() {
 
         val VOLUME_MUSIC_SPEAKER_SETTING = "volume_music_speaker"
         val VOLUME_MUSIC_HEADSET_SETTING = "volume_music_headset"
+        val VOLUME_MUSIC_BT_SETTING = "volume_music_bt_a2dp"
         val VOLUME_ALARM_SETTING = "volume_alarm"
         val VOLUME_ALARM_SPEAKER_SETTING = "volume_alarm_speaker"
-        val VOLUME_BLUETOOTH_SETTING = "volume_bluetooth_sco"
         val VOLUME_RING_SPEAKER_SETTING = "volume_ring_speaker"
+        val VOLUME_RING_EARPIECE_SETTING = "volume_ring_earpiece"
+        val VOLUME_RING_BT_SETTING = "volume_ring_bt_ad2p"
         val VOLUME_VOICE_EARPIECE_SETTING = "volume_voice_earpiece"
         val VOLUME_VOICE_HEADSET_SETTING = "volume_voice_headset"
-        val VOLUME_SYSTEM_SETTING = "volume_system"
+        val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
     }
 
     private lateinit var mAudioManager: AudioManager
@@ -42,6 +44,7 @@ class VolumeService : Service() {
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         registerObservers()
+
     }
 
     fun registerOnVolumeChangeListener(listener: () -> Unit) {
@@ -72,13 +75,18 @@ class VolumeService : Service() {
     private fun registerObservers() {
         registerObserver(VOLUME_MUSIC_SPEAKER_SETTING)
         registerObserver(VOLUME_MUSIC_HEADSET_SETTING)
+        registerObserver(VOLUME_MUSIC_BT_SETTING)
+
         registerObserver(VOLUME_ALARM_SETTING)
         registerObserver(VOLUME_ALARM_SPEAKER_SETTING)
-        registerObserver(VOLUME_BLUETOOTH_SETTING)
+
         registerObserver(VOLUME_RING_SPEAKER_SETTING)
-        registerObserver(VOLUME_SYSTEM_SETTING)
+        registerObserver(VOLUME_RING_EARPIECE_SETTING)
+        registerObserver(VOLUME_RING_BT_SETTING)
+
         registerObserver(VOLUME_VOICE_EARPIECE_SETTING)
         registerObserver(VOLUME_VOICE_HEADSET_SETTING)
+        registerObserver(VOLUME_VOICE_BT_SETTING)
     }
 
     private fun registerObserver(setting: String) {
