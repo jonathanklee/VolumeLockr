@@ -113,8 +113,7 @@ class VolumeService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "Foreground service channel",
-            NotificationManager.IMPORTANCE_DEFAULT)
+        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "VolumeLockrChannel", NotificationManager.IMPORTANCE_LOW)
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
