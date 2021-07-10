@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="media_title">Media</string>
+    <string name="title">Title</string>
+    <string name="lock">Lock</string>
+</resources>
