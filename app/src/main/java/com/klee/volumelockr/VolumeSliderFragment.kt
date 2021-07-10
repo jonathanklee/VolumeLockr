@@ -33,6 +33,10 @@ class VolumeSliderFragment : Fragment() {
         Intent(context, VolumeService::class.java).also { intent ->
             context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
