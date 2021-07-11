@@ -44,7 +44,6 @@ class VolumeService : Service() {
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         registerObservers()
-
     }
 
     fun registerOnVolumeChangeListener(listener: () -> Unit) {
@@ -57,6 +56,10 @@ class VolumeService : Service() {
 
     fun removeLock(stream: Int) {
         mVolumeLock.remove(stream)
+    }
+
+    fun getLocks() : HashMap<Int, Int> {
+        return mVolumeLock
     }
 
     private val mVolumeObserver = object : ContentObserver(mHandler) {

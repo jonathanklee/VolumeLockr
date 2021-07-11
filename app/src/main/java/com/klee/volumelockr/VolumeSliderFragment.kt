@@ -7,10 +7,10 @@ import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.IBinder
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,7 +18,7 @@ class VolumeSliderFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: VolumeAdapter
-    private var mService: VolumeService? = null
+    private lateinit var mService: VolumeService
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +35,10 @@ class VolumeSliderFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    private fun setupRecyclerView(mService: VolumeService) {
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mAdapter = VolumeAdapter(updateVolumesFromSettings(), requireContext())
+        mAdapter = VolumeAdapter(updateVolumesFromSettings(), mService, requireContext())
         mRecyclerView.adapter = mAdapter
     }
 
@@ -70,11 +68,11 @@ class VolumeSliderFragment : Fragment() {
         override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
-            mAdapter.setService(mService!!)
-
-            mService?.registerOnVolumeChangeListener {
+            setupRecyclerView(mService)
+            mService.registerOnVolumeChangeListener {
                 mAdapter.update(updateVolumesFromSettings())
             }
+
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {}

@@ -3,6 +3,7 @@ package com.klee.volumelockr
 import android.content.Context
 import android.media.AudioManager
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 class VolumeAdapter(
         private var mVolumeList: List<Volume>,
-        private var mContext: Context)
+        private var mService: VolumeService,
+        mContext: Context)
     : RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
 
     private var mAudioManager: AudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    private var mService: VolumeService? = null
 
     fun update(volumes: List<Volume>) {
         mVolumeList = volumes
         notifyDataSetChanged()
-    }
-
-    fun setService(service: VolumeService) {
-        mService = service
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -48,6 +45,8 @@ class VolumeAdapter(
 
         registerSeekBarCallback(holder, volume)
         registerSwitchButtonCallback(holder, volume)
+
+        loadValuesFromService(holder, volume)
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
@@ -76,18 +75,30 @@ class VolumeAdapter(
         }
     }
 
+    private fun loadValuesFromService(holder: ViewHolder, volume: Volume) {
+        val locks = mService.getLocks().keys
+        locks.let {
+            for (key in it) {
+                if (volume.stream == key) {
+                    holder.switchButton.isChecked = true
+                    holder.seekBar.isEnabled = false
+                }
+            }
+        }
+    }
+
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
-        mService?.addLock(volume.stream, volume.value)
+        mService.addLock(volume.stream, volume.value)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mService?.showNotification()
+            mService.showNotification()
         }
         holder.seekBar.isEnabled = false
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
-        mService?.removeLock(volume.stream)
+        mService.removeLock(volume.stream)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mService?.hideNotification()
+            mService.hideNotification()
         }
         holder.seekBar.isEnabled = true
     }
