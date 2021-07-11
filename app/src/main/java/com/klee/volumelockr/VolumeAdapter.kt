@@ -17,7 +17,7 @@ class VolumeAdapter(
     : RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
 
     private var mAudioManager: AudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    private lateinit var mService: VolumeService
+    private var mService: VolumeService? = null
 
     fun update(volumes: List<Volume>) {
         mVolumeList = volumes
@@ -77,17 +77,17 @@ class VolumeAdapter(
     }
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
-        mService.addLock(volume.stream, volume.value)
+        mService?.addLock(volume.stream, volume.value)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mService.showNotification()
+            mService?.showNotification()
         }
         holder.seekBar.isEnabled = false
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
-        mService.removeLock(volume.stream)
+        mService?.removeLock(volume.stream)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mService.hideNotification()
+            mService?.hideNotification()
         }
         holder.seekBar.isEnabled = true
     }

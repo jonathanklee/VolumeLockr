@@ -18,7 +18,7 @@ class VolumeSliderFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: VolumeAdapter
-    private lateinit var mService: VolumeService
+    private var mService: VolumeService? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,9 +70,9 @@ class VolumeSliderFragment : Fragment() {
         override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
-            mAdapter.setService(mService)
+            mAdapter.setService(mService!!)
 
-            mService.registerOnVolumeChangeListener {
+            mService?.registerOnVolumeChangeListener {
                 mAdapter.update(updateVolumesFromSettings())
             }
         }
