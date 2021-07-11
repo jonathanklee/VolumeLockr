@@ -33,7 +33,7 @@ class VolumeService : Service() {
     }
 
     private lateinit var mAudioManager: AudioManager
-    private lateinit var mListener: () -> Unit
+    private var mListener: (() -> Unit)? = null
     private val mHandler = Handler(Looper.getMainLooper())
     private val mBinder = LocalBinder()
     private val mVolumeLock = HashMap<Int, Int>()
@@ -69,7 +69,7 @@ class VolumeService : Service() {
                 mAudioManager.setStreamVolume(stream, volume, 0)
             }
 
-            mListener.invoke()
+            mListener?.invoke()
         }
     }
 
