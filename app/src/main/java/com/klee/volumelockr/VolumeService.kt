@@ -1,5 +1,6 @@
 package com.klee.volumelockr
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -13,22 +14,22 @@ import androidx.annotation.RequiresApi
 class VolumeService : Service() {
 
     companion object {
-        val NOTIFICATION_TITLE = "VolumeLockr"
-        val NOTIFICATION_DESCRIPTION = "Service is running in background"
-        val NOTIFICATION_CHANNEL_ID = "VolumeService"
-        val NOTIFICATION_ID = 4455
+        const val NOTIFICATION_TITLE = "VolumeLockr"
+        const val NOTIFICATION_DESCRIPTION = "Service is running in background"
+        const val NOTIFICATION_CHANNEL_ID = "VolumeService"
+        const val NOTIFICATION_ID = 4455
 
-        val VOLUME_MUSIC_SPEAKER_SETTING = "volume_music_speaker"
-        val VOLUME_MUSIC_HEADSET_SETTING = "volume_music_headset"
-        val VOLUME_MUSIC_BT_SETTING = "volume_music_bt_a2dp"
-        val VOLUME_ALARM_SETTING = "volume_alarm"
-        val VOLUME_ALARM_SPEAKER_SETTING = "volume_alarm_speaker"
-        val VOLUME_RING_SPEAKER_SETTING = "volume_ring_speaker"
-        val VOLUME_RING_EARPIECE_SETTING = "volume_ring_earpiece"
-        val VOLUME_RING_BT_SETTING = "volume_ring_bt_ad2p"
-        val VOLUME_VOICE_EARPIECE_SETTING = "volume_voice_earpiece"
-        val VOLUME_VOICE_HEADSET_SETTING = "volume_voice_headset"
-        val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
+        const val VOLUME_MUSIC_SPEAKER_SETTING = "volume_music_speaker"
+        const val VOLUME_MUSIC_HEADSET_SETTING = "volume_music_headset"
+        const val VOLUME_MUSIC_BT_SETTING = "volume_music_bt_a2dp"
+        const val VOLUME_ALARM_SETTING = "volume_alarm"
+        const val VOLUME_ALARM_SPEAKER_SETTING = "volume_alarm_speaker"
+        const val VOLUME_RING_SPEAKER_SETTING = "volume_ring_speaker"
+        const val VOLUME_RING_EARPIECE_SETTING = "volume_ring_earpiece"
+        const val VOLUME_RING_BT_SETTING = "volume_ring_bt_ad2p"
+        const val VOLUME_VOICE_EARPIECE_SETTING = "volume_voice_earpiece"
+        const val VOLUME_VOICE_HEADSET_SETTING = "volume_voice_headset"
+        const val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
     }
 
     private lateinit var mAudioManager: AudioManager
@@ -112,6 +113,7 @@ class VolumeService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.N)
     fun hideNotification() {
         if (mVolumeLock.size > 0) {
