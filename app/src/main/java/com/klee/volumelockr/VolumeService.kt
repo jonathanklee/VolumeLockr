@@ -30,24 +30,43 @@ class VolumeService : Service() {
         const val VOLUME_VOICE_EARPIECE_SETTING = "volume_voice_earpiece"
         const val VOLUME_VOICE_HEADSET_SETTING = "volume_voice_headset"
         const val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
+
+        const val MODE_RINGER_SETTING = "mode_ringer"
     }
 
     private lateinit var mAudioManager: AudioManager
-    private var mListener: (() -> Unit)? = null
+    private var mVolumeListener: (() -> Unit)? = null
+    private var mModeListener: (() -> Unit)? = null
     private val mHandler = Handler(Looper.getMainLooper())
     private val mBinder = LocalBinder()
     private val mVolumeLock = HashMap<Int, Int>()
+    private var mMode: Int = 2
 
     override fun onCreate() {
         super.onCreate()
 
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
+        }
 
         registerObservers()
     }
 
     fun registerOnVolumeChangeListener(listener: () -> Unit) {
-        mListener = listener
+        mVolumeListener = listener
+    }
+
+    fun unregisterOnVolumeChangeListener() {
+        mVolumeListener = null
+    }
+
+    fun registerOnModeChangeListener(listener: () -> Unit) {
+        mModeListener = listener
+    }
+
+    fun unregisterOnModeChangeListener() {
+        mModeListener = null
     }
 
     fun addLock(stream: Int, volume: Int) {
@@ -62,6 +81,10 @@ class VolumeService : Service() {
         return mVolumeLock
     }
 
+    fun getMode() : Int {
+        return mMode
+    }
+
     private val mVolumeObserver = object : ContentObserver(mHandler) {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
@@ -69,7 +92,19 @@ class VolumeService : Service() {
                 mAudioManager.setStreamVolume(stream, volume, 0)
             }
 
-            mListener?.invoke()
+            mVolumeListener?.invoke()
+        }
+    }
+
+    private val mModeObserver = object : ContentObserver(mHandler) {
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
+            }
+
+            mModeListener?.invoke()
         }
     }
 
@@ -90,6 +125,10 @@ class VolumeService : Service() {
         registerObserver(VOLUME_VOICE_EARPIECE_SETTING)
         registerObserver(VOLUME_VOICE_HEADSET_SETTING)
         registerObserver(VOLUME_VOICE_BT_SETTING)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            contentResolver.registerContentObserver(Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver)
+        }
     }
 
     private fun registerObserver(setting: String) {

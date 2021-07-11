@@ -24,6 +24,10 @@ class VolumeAdapter(
         notifyDataSetChanged()
     }
 
+    fun update() {
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.media_text_view)
         val seekBar: SeekBar = view.findViewById(R.id.seek_bar)
@@ -45,7 +49,9 @@ class VolumeAdapter(
         registerSeekBarCallback(holder, volume)
         registerSwitchButtonCallback(holder, volume)
 
-        loadValuesFromService(holder, volume)
+        loadLocksFromService(holder, volume)
+
+        handleRingerMode(holder, volume)
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
@@ -74,7 +80,7 @@ class VolumeAdapter(
         }
     }
 
-    private fun loadValuesFromService(holder: ViewHolder, volume: Volume) {
+    private fun loadLocksFromService(holder: ViewHolder, volume: Volume) {
         val locks = mService?.getLocks()?.keys
         locks?.let {
             for (key in it) {
@@ -82,6 +88,18 @@ class VolumeAdapter(
                     holder.switchButton.isChecked = true
                     holder.seekBar.isEnabled = false
                 }
+            }
+        }
+    }
+
+    private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
+        if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
+            if (mService?.getMode() != 2) {
+                holder.switchButton.isEnabled = false
+                holder.seekBar.isEnabled = false
+            } else {
+                holder.switchButton.isEnabled = true
+                holder.seekBar.isEnabled = true
             }
         }
     }

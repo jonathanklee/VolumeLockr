@@ -37,17 +37,23 @@ class VolumeSliderFragment : Fragment() {
         setupRecyclerView(mService)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mService?.unregisterOnModeChangeListener()
+        mService?.unregisterOnVolumeChangeListener()
+    }
+
     private fun setupRecyclerView(service: VolumeService?) {
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         mAdapter = service?.let {
-            VolumeAdapter(updateVolumesFromSettings(), it, requireContext())
-        } ?: VolumeAdapter(updateVolumesFromSettings(), null, requireContext())
+            VolumeAdapter(buildVolumesFromSettings(), it, requireContext())
+        } ?: VolumeAdapter(buildVolumesFromSettings(), null, requireContext())
 
         mRecyclerView.adapter = mAdapter
     }
 
-    private fun updateVolumesFromSettings() : List<Volume> {
+    private fun buildVolumesFromSettings() : List<Volume> {
         return listOf(
             Volume(resources.getString(R.string.media_title), AudioManager.STREAM_MUSIC,
                 fetchVolume(AudioManager.STREAM_MUSIC), 0, 25, false),
@@ -74,10 +80,14 @@ class VolumeSliderFragment : Fragment() {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
             setupRecyclerView(mService)
+
             mService?.registerOnVolumeChangeListener {
-                mAdapter.update(updateVolumesFromSettings())
+                mAdapter.update(buildVolumesFromSettings())
             }
 
+            mService?.registerOnModeChangeListener {
+                mAdapter.update()
+            }
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {}
