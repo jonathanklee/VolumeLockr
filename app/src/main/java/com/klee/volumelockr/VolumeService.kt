@@ -8,7 +8,6 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 
 class VolumeService : Service() {

@@ -18,7 +18,7 @@ class VolumeSliderFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: VolumeAdapter
-    private lateinit var mService: VolumeService
+    private var mService: VolumeService? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,12 +33,17 @@ class VolumeSliderFragment : Fragment() {
         Intent(context, VolumeService::class.java).also { intent ->
             context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
+
+        setupRecyclerView(mService)
     }
 
-    private fun setupRecyclerView(mService: VolumeService) {
+    private fun setupRecyclerView(service: VolumeService?) {
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mAdapter = VolumeAdapter(updateVolumesFromSettings(), mService, requireContext())
+        mAdapter = service?.let {
+            VolumeAdapter(updateVolumesFromSettings(), it, requireContext())
+        } ?: VolumeAdapter(updateVolumesFromSettings(), null, requireContext())
+
         mRecyclerView.adapter = mAdapter
     }
 
@@ -69,7 +74,7 @@ class VolumeSliderFragment : Fragment() {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
             setupRecyclerView(mService)
-            mService.registerOnVolumeChangeListener {
+            mService?.registerOnVolumeChangeListener {
                 mAdapter.update(updateVolumesFromSettings())
             }
 
