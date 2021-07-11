@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <string name="media_title">Contenus multimédias</string>
+    <string name="alarm_title">Alarmes</string>
+    <string name="notification_title">Sonneries / Notifications</string>
+    <string name="call_title">Appels</string>
+    <string name="title">Titre</string>
+    <string name="lock">Vérouiller</string>
+</resources>

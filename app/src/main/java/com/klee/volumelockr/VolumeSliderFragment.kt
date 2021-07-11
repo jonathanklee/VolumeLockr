@@ -46,11 +46,17 @@ class VolumeSliderFragment : Fragment() {
 
     private fun updateVolumesFromSettings() : List<Volume> {
         return listOf(
-            Volume("Media", AudioManager.STREAM_MUSIC, fetchVolume(AudioManager.STREAM_MUSIC), 0, 25, false),
-            Volume("Call", AudioManager.STREAM_VOICE_CALL, fetchVolume(AudioManager.STREAM_VOICE_CALL), 1, 7, false),
-            Volume("Alarm", AudioManager.STREAM_ALARM, fetchVolume(AudioManager.STREAM_ALARM), 1, 7, false),
-            Volume("Notification", AudioManager.STREAM_NOTIFICATION,
+            Volume(resources.getString(R.string.media_title), AudioManager.STREAM_MUSIC,
+                fetchVolume(AudioManager.STREAM_MUSIC), 0, 25, false),
+
+            Volume(resources.getString(R.string.call_title), AudioManager.STREAM_VOICE_CALL,
+                fetchVolume(AudioManager.STREAM_VOICE_CALL), 1, 7, false),
+
+            Volume(resources.getString(R.string.notification_title), AudioManager.STREAM_NOTIFICATION,
                 fetchVolume(AudioManager.STREAM_NOTIFICATION), 0,7, false),
+
+            Volume(resources.getString(R.string.alarm_title), AudioManager.STREAM_ALARM,
+                fetchVolume(AudioManager.STREAM_ALARM), 1, 7, false),
         )
     }
 
