@@ -9,7 +9,10 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.util.Log
 import androidx.annotation.RequiresApi
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class VolumeService : Service() {
 
@@ -18,6 +21,8 @@ class VolumeService : Service() {
         const val NOTIFICATION_DESCRIPTION = "Service is running in background"
         const val NOTIFICATION_CHANNEL_ID = "VolumeService"
         const val NOTIFICATION_ID = 4455
+        const val APP_SHARED_PREFERENCES = "volumelockr_shared_preferences"
+        const val LOCKS_KEY = "locks_key"
 
         const val VOLUME_MUSIC_SPEAKER_SETTING = "volume_music_speaker"
         const val VOLUME_MUSIC_HEADSET_SETTING = "volume_music_headset"
@@ -39,13 +44,16 @@ class VolumeService : Service() {
     private var mModeListener: (() -> Unit)? = null
     private val mHandler = Handler(Looper.getMainLooper())
     private val mBinder = LocalBinder()
-    private val mVolumeLock = HashMap<Int, Int>()
+    private var mVolumeLock = HashMap<Int, Int>()
     private var mMode: Int = 2
 
     override fun onCreate() {
         super.onCreate()
 
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        loadPreferences()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
         }
@@ -71,10 +79,12 @@ class VolumeService : Service() {
 
     fun addLock(stream: Int, volume: Int) {
         mVolumeLock[stream] = volume
+        savePreferences()
     }
 
     fun removeLock(stream: Int) {
         mVolumeLock.remove(stream)
+        savePreferences()
     }
 
     fun getLocks() : HashMap<Int, Int> {
@@ -83,6 +93,22 @@ class VolumeService : Service() {
 
     fun getMode() : Int {
         return mMode
+    }
+
+    private fun savePreferences() {
+        val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
+        editor.apply()
+    }
+
+    private fun loadPreferences() {
+        val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
+        class Token : TypeToken<HashMap<Int, Int>>()
+        val value = sharedPreferences.getString(LOCKS_KEY, "")
+        if (!value.isNullOrBlank()) {
+            mVolumeLock = Gson().fromJson(value, Token().type)
+        }
     }
 
     private val mVolumeObserver = object : ContentObserver(mHandler) {
@@ -138,7 +164,7 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun showNotification() {
 
-        if (mVolumeLock.size != 1) {
+        if (mVolumeLock.size == 0) {
             return
         }
 

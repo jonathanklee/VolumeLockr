@@ -46,10 +46,7 @@ class VolumeSliderFragment : Fragment() {
     private fun setupRecyclerView(service: VolumeService?) {
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mAdapter = service?.let {
-            VolumeAdapter(buildVolumesFromSettings(), it, requireContext())
-        } ?: VolumeAdapter(buildVolumesFromSettings(), null, requireContext())
-
+        mAdapter = VolumeAdapter(buildVolumesFromSettings(), service, requireContext())
         mRecyclerView.adapter = mAdapter
     }
 

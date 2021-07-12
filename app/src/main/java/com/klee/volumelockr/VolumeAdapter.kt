@@ -52,6 +52,8 @@ class VolumeAdapter(
         loadLocksFromService(holder, volume)
 
         handleRingerMode(holder, volume)
+
+        adjustNotification()
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
@@ -92,6 +94,18 @@ class VolumeAdapter(
         }
     }
 
+    private fun adjustNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mService?.getLocks()?.let {
+                if (it.size > 0) {
+                    mService?.showNotification()
+                } else {
+                    mService?.hideNotification()
+                }
+            }
+        }
+    }
+
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
         if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
             if (mService?.getMode() != 2) {
@@ -106,17 +120,13 @@ class VolumeAdapter(
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
         mService?.addLock(volume.stream, volume.value)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mService?.showNotification()
-        }
+        adjustNotification()
         holder.seekBar.isEnabled = false
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
         mService?.removeLock(volume.stream)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mService?.hideNotification()
-        }
+        adjustNotification()
         holder.seekBar.isEnabled = true
     }
 
