@@ -43,7 +43,9 @@ class VolumeAdapter(
         val volume = mVolumeList[position]
         holder.textView.text = volume.name
         holder.seekBar.progress = volume.value
-        holder.seekBar.min = volume.min
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.seekBar.min = volume.min
+        }
         holder.seekBar.max = volume.max
 
         registerSeekBarCallback(holder, volume)
