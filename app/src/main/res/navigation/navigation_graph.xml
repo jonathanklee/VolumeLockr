@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/volumeSliderFragment">
+
+    <include app:graph="@navigation/aboutlibs_navigation" />
+
     <fragment
         android:id="@+id/volumeSliderFragment"
         android:name="com.klee.volumelockr.VolumeSliderFragment"
-        android:label="VolumeSliderFragment" />
+        android:label="VolumeSliderFragment">
+        <action
+            android:id="@+id/action_x_to_about_libs"
+            app:destination="@id/about_libraries" />
+    </fragment>
+
+
 </navigation>

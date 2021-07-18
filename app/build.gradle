@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.kapt'
     id 'kotlin-android'
+    id 'com.mikepenz.aboutlibraries.plugin'
 }
 
 android {
@@ -42,7 +43,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
     implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.mikepenz:aboutlibraries-core:8.9.0'
+    implementation 'com.mikepenz:aboutlibraries:8.9.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
