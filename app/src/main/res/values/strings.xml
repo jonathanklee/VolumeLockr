@@ -6,4 +6,8 @@
     <string name="call_title">Voice calls</string>
     <string name="title">Title</string>
     <string name="lock">Lock</string>
+    <string name="about">About</string>
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">VolumeLockr developed by Jonathan Klee (:</string>
 </resources>

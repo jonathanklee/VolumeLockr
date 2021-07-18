@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
+import com.mikepenz.aboutlibraries.LibsBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,11 +19,5 @@ class MainActivity : AppCompatActivity() {
     private fun startService() {
         val intent = Intent(this, VolumeService::class.java);
         startService(intent)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options, menu)
-        return true
     }
 }
