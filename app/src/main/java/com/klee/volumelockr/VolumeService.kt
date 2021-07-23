@@ -173,6 +173,7 @@ class VolumeService : Service() {
             .setContentTitle(NOTIFICATION_TITLE)
             .setContentText(NOTIFICATION_DESCRIPTION)
             .setSmallIcon(R.drawable.ic_volumelockr_foreground)
+            .setContentIntent(createNotificationContentIntent())
             .build()
 
         startForeground(NOTIFICATION_ID, notification)
@@ -186,6 +187,14 @@ class VolumeService : Service() {
         }
 
         stopForeground(NOTIFICATION_ID)
+    }
+
+    private fun createNotificationContentIntent() : PendingIntent {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        return PendingIntent.getActivity(this, 0, intent, 0)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
