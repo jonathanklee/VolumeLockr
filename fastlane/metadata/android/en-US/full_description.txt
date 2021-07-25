@@ -1,0 +1,1 @@
+VolumeLockr is an Android app which allows you to control and lock the volume of your device.
