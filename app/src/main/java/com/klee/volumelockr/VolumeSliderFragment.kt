@@ -6,8 +6,15 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
-import android.view.*
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.View
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +40,10 @@ class VolumeSliderFragment : Fragment() {
         Intent(context, VolumeService::class.java).also { intent ->
             context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         setupRecyclerView(mService)
     }
@@ -91,7 +102,7 @@ class VolumeSliderFragment : Fragment() {
             mService = binder.getService()
             setupRecyclerView(mService)
 
-            mService?.registerOnVolumeChangeListener {
+            mService?.registerOnVolumeChangeListener(Handler(Looper.getMainLooper())) {
                 mAdapter.update(buildVolumesFromSettings())
             }
 

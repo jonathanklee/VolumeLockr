@@ -51,11 +51,9 @@ class VolumeAdapter(
         registerSeekBarCallback(holder, volume)
         registerSwitchButtonCallback(holder, volume)
 
-        loadLocksFromService(holder, volume)
+        loadLockFromService(holder, volume)
 
         handleRingerMode(holder, volume)
-
-        adjustNotification()
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
@@ -84,7 +82,7 @@ class VolumeAdapter(
         }
     }
 
-    private fun loadLocksFromService(holder: ViewHolder, volume: Volume) {
+    private fun loadLockFromService(holder: ViewHolder, volume: Volume) {
         val locks = mService?.getLocks()?.keys
         locks?.let {
             for (key in it) {
@@ -92,6 +90,16 @@ class VolumeAdapter(
                     holder.switchButton.isChecked = true
                     holder.seekBar.isEnabled = false
                 }
+            }
+        }
+    }
+
+    private fun adjustService() {
+        mService?.getLocks()?.let {
+            if (it.size > 0) {
+                mService?.startLocking()
+            } else {
+                mService?.stopLocking()
             }
         }
     }
@@ -122,12 +130,14 @@ class VolumeAdapter(
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
         mService?.addLock(volume.stream, volume.value)
+        adjustService()
         adjustNotification()
         holder.seekBar.isEnabled = false
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
         mService?.removeLock(volume.stream)
+        adjustService()
         adjustNotification()
         holder.seekBar.isEnabled = true
     }

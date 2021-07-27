@@ -1,18 +1,28 @@
 package com.klee.volumelockr
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.media.AudioManager
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.Binder
+import android.os.IBinder
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.collections.HashMap
 
 class VolumeService : Service() {
 
@@ -40,12 +50,13 @@ class VolumeService : Service() {
     }
 
     private lateinit var mAudioManager: AudioManager
+    private var mVolumeListenerHandler: Handler? = null
     private var mVolumeListener: (() -> Unit)? = null
     private var mModeListener: (() -> Unit)? = null
-    private val mHandler = Handler(Looper.getMainLooper())
     private val mBinder = LocalBinder()
     private var mVolumeLock = HashMap<Int, Int>()
     private var mMode: Int = 2
+    private var mTimer: Timer? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -61,7 +72,21 @@ class VolumeService : Service() {
         registerObservers()
     }
 
-    fun registerOnVolumeChangeListener(listener: () -> Unit) {
+    fun startLocking() {
+        mTimer = Timer()
+        mTimer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                checkVolumes()
+            }
+        }, 0, 100)
+    }
+
+    fun stopLocking() {
+        mTimer?.cancel()
+    }
+
+    fun registerOnVolumeChangeListener(handler: Handler, listener: () -> Unit) {
+        mVolumeListenerHandler = handler
         mVolumeListener = listener
     }
 
@@ -111,18 +136,32 @@ class VolumeService : Service() {
         }
     }
 
-    private val mVolumeObserver = object : ContentObserver(mHandler) {
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-            for ((stream, volume) in mVolumeLock) {
-                mAudioManager.setStreamVolume(stream, volume, 0)
+    private fun checkVolumes() {
+        for ((stream, volume) in mVolumeLock) {
+            if (mAudioManager.getStreamVolume(stream) == volume) {
+                continue
             }
 
-            mVolumeListener?.invoke()
+            mAudioManager.setStreamVolume(stream, volume, 0)
+            invokeVolumeListenerCallback()
         }
     }
 
-    private val mModeObserver = object : ContentObserver(mHandler) {
+    private val mVolumeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+            invokeVolumeListenerCallback()
+        }
+    }
+
+    private fun invokeVolumeListenerCallback() {
+        mVolumeListenerHandler?.removeCallbacksAndMessages(null)
+        mVolumeListenerHandler?.postDelayed({
+            mVolumeListener?.invoke()
+        }, 200)
+    }
+
+    private val mModeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
 
