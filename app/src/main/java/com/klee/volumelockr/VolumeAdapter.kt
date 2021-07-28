@@ -59,7 +59,10 @@ class VolumeAdapter(
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
         val listener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(view: SeekBar?, progress: Int, fromUser: Boolean) {
-                mAudioManager.setStreamVolume(volume.stream, progress, 0)
+                if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == 2) {
+                    mAudioManager.setStreamVolume(volume.stream, progress, 0)
+                }
+
                 volume.value = progress
             }
 

@@ -138,12 +138,13 @@ class VolumeService : Service() {
 
     private fun checkVolumes() {
         for ((stream, volume) in mVolumeLock) {
-            if (mAudioManager.getStreamVolume(stream) == volume) {
-                continue
-            }
+            if (mAudioManager.getStreamVolume(stream) != volume) {
 
-            mAudioManager.setStreamVolume(stream, volume, 0)
-            invokeVolumeListenerCallback()
+                if (mMode != 2 && volume != AudioManager.STREAM_NOTIFICATION) {
+                    mAudioManager.setStreamVolume(stream, volume, 0)
+                    invokeVolumeListenerCallback()
+                }
+            }
         }
     }
 
