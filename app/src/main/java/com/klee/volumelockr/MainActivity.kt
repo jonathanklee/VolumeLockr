@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startService() {
-        val intent = Intent(this, VolumeService::class.java);
+        val intent = Intent(this, VolumeService::class.java)
         startService(intent)
     }
 }
