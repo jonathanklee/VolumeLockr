@@ -21,7 +21,7 @@ class VolumeAdapter(
 
     fun update(volumes: List<Volume>) {
         mVolumeList = volumes
-        notifyDataSetChanged()
+        update()
     }
 
     fun update() {
@@ -121,13 +121,8 @@ class VolumeAdapter(
 
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
         if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
-            if (mService?.getMode() != 2) {
-                holder.switchButton.isEnabled = false
-                holder.seekBar.isEnabled = false
-            } else {
-                holder.switchButton.isEnabled = true
-                holder.seekBar.isEnabled = true
-            }
+            holder.seekBar.isEnabled =
+                mService?.getMode() == 2 && mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
         }
     }
 

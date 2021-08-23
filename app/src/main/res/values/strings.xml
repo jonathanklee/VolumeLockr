@@ -10,4 +10,6 @@
     <string name="aboutLibraries_description_showIcon">true</string>
     <string name="aboutLibraries_description_showVersion">true</string>
     <string name="aboutLibraries_description_text">VolumeLockr developed by Jonathan Klee (:</string>
+    <string name="dialog_policy_access_title">You must allow VolumeLockr to access Do Not Disturb mode</string>
+    <string name="dialog_allow">Allow</string>
 </resources>
