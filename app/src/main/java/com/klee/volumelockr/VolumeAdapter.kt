@@ -19,6 +19,15 @@ class VolumeAdapter(
 
     private var mAudioManager: AudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
+    fun update(volumes: List<Volume>) {
+        mVolumeList = volumes
+        update()
+    }
+
+    fun update() {
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.media_text_view)
         val seekBar: SeekBar = view.findViewById(R.id.seek_bar)
