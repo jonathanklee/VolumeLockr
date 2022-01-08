@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_volumelockr_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Volume">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
