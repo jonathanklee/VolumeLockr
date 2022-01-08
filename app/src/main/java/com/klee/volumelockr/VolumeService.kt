@@ -50,6 +50,7 @@ class VolumeService : Service() {
     }
 
     private lateinit var mAudioManager: AudioManager
+    private lateinit var mVolumeProvider: VolumeProvider
     private var mVolumeListenerHandler: Handler? = null
     private var mVolumeListener: (() -> Unit)? = null
     private var mModeListener: (() -> Unit)? = null
@@ -62,6 +63,7 @@ class VolumeService : Service() {
         super.onCreate()
 
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        mVolumeProvider = VolumeProvider(this)
 
         loadPreferences()
 
@@ -71,6 +73,8 @@ class VolumeService : Service() {
 
         registerObservers()
     }
+
+    fun getVolumes() : List<Volume> = mVolumeProvider.getVolumes()
 
     fun startLocking() {
         mTimer = Timer()

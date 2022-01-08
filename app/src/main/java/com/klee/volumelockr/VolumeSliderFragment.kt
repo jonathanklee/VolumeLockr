@@ -23,7 +23,6 @@ class VolumeSliderFragment : Fragment() {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: VolumeAdapter
-    private lateinit var mVolumeProvider: VolumeProvider
     private var mService: VolumeService? = null
 
     override fun onCreateView(
@@ -36,18 +35,11 @@ class VolumeSliderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        mVolumeProvider = VolumeProvider(requireContext())
-
-        Intent(context, VolumeService::class.java).also { intent ->
-            context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        mService?.let {
+            onServiceConnected()
+        } ?: Intent(context, VolumeService::class.java).also { intent ->
+                context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        setupRecyclerView(mService)
     }
 
     override fun onDestroyView() {
@@ -69,10 +61,10 @@ class VolumeSliderFragment : Fragment() {
         return true
     }
 
-    private fun setupRecyclerView(service: VolumeService?) {
+    private fun setupRecyclerView(service: VolumeService) {
         mRecyclerView = requireView().findViewById(R.id.recycler_view)
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mAdapter = VolumeAdapter(mVolumeProvider.getVolumes(), service, requireContext())
+        mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
         mRecyclerView.adapter = mAdapter
     }
 
@@ -81,17 +73,23 @@ class VolumeSliderFragment : Fragment() {
         override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
-            setupRecyclerView(mService)
+            onServiceConnected()
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {}
+    }
+
+    private fun onServiceConnected() {
+        mService?.let {
+            setupRecyclerView(it)
 
             mService?.registerOnVolumeChangeListener(Handler(Looper.getMainLooper())) {
-                mAdapter.update(mVolumeProvider.getVolumes())
+                mAdapter.update(it.getVolumes())
             }
 
             mService?.registerOnModeChangeListener {
                 mAdapter.update()
             }
         }
-
-        override fun onServiceDisconnected(p0: ComponentName?) {}
     }
 }
