@@ -72,6 +72,10 @@ class VolumeService : Service() {
         }
 
         registerObservers()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tryShowNotification()
+        }
     }
 
     fun getVolumes() : List<Volume> = mVolumeProvider.getVolumes()
@@ -203,7 +207,7 @@ class VolumeService : Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun showNotification() {
+    fun tryShowNotification() {
 
         if (mVolumeLock.size == 0) {
             return
@@ -222,7 +226,7 @@ class VolumeService : Service() {
 
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.N)
-    fun hideNotification() {
+    fun tryHideNotification() {
         if (mVolumeLock.size > 0) {
             return
         }

@@ -111,9 +111,9 @@ class VolumeAdapter(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mService?.getLocks()?.let {
                 if (it.size > 0) {
-                    mService?.showNotification()
+                    mService?.tryShowNotification()
                 } else {
-                    mService?.hideNotification()
+                    mService?.tryHideNotification()
                 }
             }
         }
