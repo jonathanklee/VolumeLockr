@@ -6,6 +6,7 @@
     <string name="call_title">Voice calls</string>
     <string name="title">Title</string>
     <string name="lock">Lock</string>
+    <string name="options">Settings</string>
     <string name="about">About</string>
     <string name="aboutLibraries_description_text">VolumeLockr developed by Jonathan Klee (:</string>
     <string name="dialog_policy_access_title">You must allow VolumeLockr to access Do Not Disturb mode</string>
@@ -13,4 +14,10 @@
 
     <string name="aboutLibraries_description_showIcon">true</string>
     <string name="aboutLibraries_description_showVersion">true</string>
+
+    <!-- Preferences -->
+    <string name="password_header">Password</string>
+    <string name="password_protected">Enable password protection</string>
+    <string name="change_password">Change password</string>
+    <string name="enter_password">Enter your password</string>
 </resources>

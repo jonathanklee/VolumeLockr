@@ -3,18 +3,21 @@ package com.klee.volumelockr
 import android.content.Context
 import android.media.AudioManager
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,
     private var mService: VolumeService?,
-    mContext: Context)
+    private var mContext: Context)
     : RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
 
     private var mAudioManager: AudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -52,6 +55,11 @@ class VolumeAdapter(
         registerSwitchButtonCallback(holder, volume)
 
         loadLockFromService(holder, volume)
+
+        if (isPasswordProtected()) {
+            holder.seekBar.isEnabled = false
+            holder.switchButton.isEnabled = false
+        }
 
         handleRingerMode(holder, volume)
     }
@@ -138,6 +146,11 @@ class VolumeAdapter(
         adjustService()
         adjustNotification()
         holder.seekBar.isEnabled = true
+    }
+
+    private fun isPasswordProtected() : Boolean {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        return sharedPreferences.getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
     }
 
     override fun getItemCount(): Int {

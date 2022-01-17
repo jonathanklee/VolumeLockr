@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.with as with1
 
 class VolumeSliderFragment : Fragment() {
 
@@ -55,8 +56,9 @@ class VolumeSliderFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.about) {
-            findNavController().navigate(R.id.action_x_to_about_libs)
+        when (item.itemId) {
+            R.id.about -> findNavController().navigate(R.id.action_x_to_about_libs)
+            R.id.options -> findNavController().navigate(R.id.action_sliders_to_settings)
         }
         return true
     }

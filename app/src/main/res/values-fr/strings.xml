@@ -6,8 +6,15 @@
     <string name="call_title">Appels</string>
     <string name="title">Titre</string>
     <string name="lock">Vérouiller</string>
+    <string name="options">Options</string>
     <string name="about">A propos</string>
     <string name="aboutLibraries_description_text">VolumeLockr développé par Jonathan Klee (:</string>
     <string name="dialog_policy_access_title">Vous devez autoriser VolumeLockr à accéder au mode Ne pas déranger</string>
     <string name="dialog_allow">Autoriser</string>
+
+    <!-- Preferences -->
+    <string name="password_header">Mot de passe</string>
+    <string name="password_protected">Activer la protection par mot de passe</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="enter_password">Entrez votre mot de passe</string>
 </resources>

@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.dialog_policy_access_title))
+                .setCancelable(false)
                 .setPositiveButton(getString(R.string.dialog_allow)) { _,_  ->
                     startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
                 }
