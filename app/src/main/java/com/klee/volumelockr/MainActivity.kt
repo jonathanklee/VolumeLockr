@@ -6,10 +6,10 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkDoNotDisturbPermission() {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             PolicyAccessDialog().show(supportFragmentManager, PolicyAccessDialog.TAG)
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.dialog_policy_access_title))
                 .setCancelable(false)
-                .setPositiveButton(getString(R.string.dialog_allow)) { _,_  ->
+                .setPositiveButton(getString(R.string.dialog_allow)) { _, _ ->
                     startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
                 }
                 .create()

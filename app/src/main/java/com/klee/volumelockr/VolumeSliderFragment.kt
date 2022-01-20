@@ -9,16 +9,15 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.view.View
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.with as with1
 
 class VolumeSliderFragment : Fragment() {
 
@@ -27,7 +26,8 @@ class VolumeSliderFragment : Fragment() {
     private var mService: VolumeService? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
@@ -39,7 +39,7 @@ class VolumeSliderFragment : Fragment() {
         mService?.let {
             onServiceConnected()
         } ?: Intent(context, VolumeService::class.java).also { intent ->
-                context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
 

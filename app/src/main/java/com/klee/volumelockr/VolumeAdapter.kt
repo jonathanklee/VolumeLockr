@@ -3,13 +3,11 @@ package com.klee.volumelockr
 import android.content.Context
 import android.media.AudioManager
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,
     private var mService: VolumeService?,
-    private var mContext: Context)
-    : RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
+    private var mContext: Context
+) :
+    RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
 
-    private var mAudioManager: AudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private var mAudioManager: AudioManager =
+        mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     fun update(volumes: List<Volume>) {
         mVolumeList = volumes
@@ -130,7 +130,8 @@ class VolumeAdapter(
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
         if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
             holder.seekBar.isEnabled =
-                mService?.getMode() == 2 && mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
+                mService?.getMode() == 2 &&
+                mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
         }
     }
 
@@ -148,7 +149,7 @@ class VolumeAdapter(
         holder.seekBar.isEnabled = true
     }
 
-    private fun isPasswordProtected() : Boolean {
+    private fun isPasswordProtected(): Boolean {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         return sharedPreferences.getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
     }
@@ -164,4 +165,5 @@ data class Volume(
     var value: Int,
     val min: Int,
     val max: Int,
-    var locked: Boolean)
+    var locked: Boolean
+)

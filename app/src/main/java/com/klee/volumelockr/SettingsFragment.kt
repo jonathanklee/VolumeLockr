@@ -7,7 +7,10 @@ import android.text.InputType
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.preference.*
+import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreferenceCompat
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -68,7 +71,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun checkPassword(challenger: String) {
         val password =
             PreferenceManager.getDefaultSharedPreferences(context).getString(
-                PASSWORD_CHANGE_PREFERENCE, "")
+                PASSWORD_CHANGE_PREFERENCE, ""
+            )
 
         val isOk = password == challenger
         passwordProtected.isChecked = !isOk

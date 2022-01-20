@@ -11,11 +11,11 @@ import android.content.Intent
 import android.database.ContentObserver
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Binder
 import android.os.Build
 import android.os.Handler
-import android.os.Looper
-import android.os.Binder
 import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
@@ -78,15 +78,18 @@ class VolumeService : Service() {
         }
     }
 
-    fun getVolumes() : List<Volume> = mVolumeProvider.getVolumes()
+    fun getVolumes(): List<Volume> = mVolumeProvider.getVolumes()
 
     fun startLocking() {
         mTimer = Timer()
-        mTimer?.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                checkVolumes()
-            }
-        }, 0, 100)
+        mTimer?.scheduleAtFixedRate(
+            object : TimerTask() {
+                override fun run() {
+                    checkVolumes()
+                }
+            },
+            0, 100
+        )
     }
 
     fun stopLocking() {
@@ -120,11 +123,11 @@ class VolumeService : Service() {
         savePreferences()
     }
 
-    fun getLocks() : HashMap<Int, Int> {
+    fun getLocks(): HashMap<Int, Int> {
         return mVolumeLock
     }
 
-    fun getMode() : Int {
+    fun getMode(): Int {
         return mMode
     }
 
@@ -179,7 +182,7 @@ class VolumeService : Service() {
         }
     }
 
-    private fun fetchUri(setting: String) : Uri = Settings.System.getUriFor(setting)
+    private fun fetchUri(setting: String): Uri = Settings.System.getUriFor(setting)
 
     private fun registerObservers() {
         registerObserver(VOLUME_MUSIC_SPEAKER_SETTING)
@@ -198,7 +201,9 @@ class VolumeService : Service() {
         registerObserver(VOLUME_VOICE_BT_SETTING)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            contentResolver.registerContentObserver(Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver)
+            contentResolver.registerContentObserver(
+                Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver
+            )
         }
     }
 
@@ -234,17 +239,21 @@ class VolumeService : Service() {
         stopForeground(NOTIFICATION_ID)
     }
 
-    private fun createNotificationContentIntent() : PendingIntent {
+    private fun createNotificationContentIntent(): PendingIntent {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(
+            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "VolumeLockrChannel", NotificationManager.IMPORTANCE_LOW)
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID, "VolumeLockrChannel", NotificationManager.IMPORTANCE_LOW
+        )
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
