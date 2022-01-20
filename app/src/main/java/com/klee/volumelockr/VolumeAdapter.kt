@@ -56,12 +56,12 @@ class VolumeAdapter(
 
         loadLockFromService(holder, volume)
 
+        handleRingerMode(holder, volume)
+
         if (isPasswordProtected()) {
             holder.seekBar.isEnabled = false
             holder.switchButton.isEnabled = false
         }
-
-        handleRingerMode(holder, volume)
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
