@@ -89,7 +89,7 @@ class VolumeService : Service() {
                     checkVolumes()
                 }
             },
-            0, 100
+            0, 25
         )
     }
 
@@ -169,7 +169,7 @@ class VolumeService : Service() {
         mVolumeListenerHandler?.removeCallbacksAndMessages(null)
         mVolumeListenerHandler?.postDelayed({
             mVolumeListener?.invoke()
-        }, 200)
+        }, 100)
     }
 
     private val mModeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
