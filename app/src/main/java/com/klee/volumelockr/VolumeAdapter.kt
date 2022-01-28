@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.annotation.MainThread
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.volumelockr.databinding.VolumeCardBinding
@@ -20,11 +21,13 @@ class VolumeAdapter(
     private var mAudioManager: AudioManager =
         mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
+    @MainThread
     fun update(volumes: List<Volume>) {
         mVolumeList = volumes
         update()
     }
 
+    @MainThread
     fun update() {
         notifyDataSetChanged()
     }

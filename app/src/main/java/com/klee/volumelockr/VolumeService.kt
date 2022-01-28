@@ -18,6 +18,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import androidx.annotation.WorkerThread
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Timer
@@ -147,6 +148,7 @@ class VolumeService : Service() {
         }
     }
 
+    @WorkerThread
     private fun checkVolumes() {
         for ((stream, volume) in mVolumeLock) {
             if (mAudioManager.getStreamVolume(stream) != volume) {
