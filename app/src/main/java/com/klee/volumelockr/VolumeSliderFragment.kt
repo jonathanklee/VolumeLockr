@@ -17,11 +17,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
 
 class VolumeSliderFragment : Fragment() {
 
-    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mBinding: FragmentVolumeSliderBinding
     private lateinit var mAdapter: VolumeAdapter
     private var mService: VolumeService? = null
 
@@ -29,9 +29,10 @@ class VolumeSliderFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_volume_slider, container, false)
+        mBinding = FragmentVolumeSliderBinding.inflate(layoutInflater)
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,10 +65,9 @@ class VolumeSliderFragment : Fragment() {
     }
 
     private fun setupRecyclerView(service: VolumeService) {
-        mRecyclerView = requireView().findViewById(R.id.recycler_view)
-        mRecyclerView.layoutManager = LinearLayoutManager(context)
+        mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
-        mRecyclerView.adapter = mAdapter
+        mBinding.recyclerView.adapter = mAdapter
     }
 
     private val connection = object : ServiceConnection {
