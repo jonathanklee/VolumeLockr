@@ -145,6 +145,7 @@ class VolumeService : Service() {
         val value = sharedPreferences.getString(LOCKS_KEY, "")
         if (!value.isNullOrBlank()) {
             mVolumeLock = Gson().fromJson(value, Token().type)
+            startLocking()
         }
     }
 
