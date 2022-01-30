@@ -33,6 +33,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             editText.text.clear()
             editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
+        passwordChange.setOnPreferenceChangeListener { _, value ->
+            passwordProtected.isEnabled = value.toString().isNotEmpty()
+            true
+        }
 
         passwordProtected.setOnPreferenceChangeListener { _, value ->
             if (value == true) {
@@ -42,6 +46,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
+        passwordProtected.isEnabled = isPasswordSet()
     }
 
     private fun askForPassword() {
@@ -77,5 +82,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val isOk = password == challenger
         passwordProtected.isChecked = !isOk
         passwordChange.isEnabled = isOk
+    }
+
+    private fun isPasswordSet(): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(
+            PASSWORD_CHANGE_PREFERENCE, ""
+        )?.length != 0
     }
 }
