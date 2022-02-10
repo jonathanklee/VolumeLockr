@@ -115,17 +115,26 @@ class VolumeService : Service() {
     }
 
     fun addLock(stream: Int, volume: Int) {
-        mVolumeLock[stream] = volume
+        synchronized(this) {
+            mVolumeLock[stream] = volume
+        }
         savePreferences()
     }
 
     fun removeLock(stream: Int) {
-        mVolumeLock.remove(stream)
+        synchronized(this) {
+            mVolumeLock.remove(stream)
+        }
         savePreferences()
     }
 
     fun getLocks(): HashMap<Int, Int> {
-        return mVolumeLock
+        var locks: HashMap<Int, Int>
+        synchronized(this) {
+            locks = mVolumeLock
+        }
+
+        return locks
     }
 
     fun getMode(): Int {
@@ -135,7 +144,9 @@ class VolumeService : Service() {
     private fun savePreferences() {
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
+        synchronized(this) {
+            editor.putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
+        }
         editor.apply()
     }
 
@@ -144,17 +155,21 @@ class VolumeService : Service() {
         class Token : TypeToken<HashMap<Int, Int>>()
         val value = sharedPreferences.getString(LOCKS_KEY, "")
         if (!value.isNullOrBlank()) {
-            mVolumeLock = Gson().fromJson(value, Token().type)
+            synchronized(this) {
+                mVolumeLock = Gson().fromJson(value, Token().type)
+            }
             startLocking()
         }
     }
 
     @WorkerThread
     private fun checkVolumes() {
-        for ((stream, volume) in mVolumeLock) {
-            if (mAudioManager.getStreamVolume(stream) != volume) {
-                mAudioManager.setStreamVolume(stream, volume, 0)
-                invokeVolumeListenerCallback()
+        synchronized(this) {
+            for ((stream, volume) in mVolumeLock) {
+                if (mAudioManager.getStreamVolume(stream) != volume) {
+                    mAudioManager.setStreamVolume(stream, volume, 0)
+                    invokeVolumeListenerCallback()
+                }
             }
         }
     }
@@ -217,7 +232,12 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun tryShowNotification() {
 
-        if (mVolumeLock.size == 0) {
+        var locksListSize: Int
+        synchronized(this) {
+            locksListSize = mVolumeLock.size
+        }
+
+        if (locksListSize == 0) {
             return
         }
 
@@ -235,7 +255,12 @@ class VolumeService : Service() {
     @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.N)
     fun tryHideNotification() {
-        if (mVolumeLock.size > 0) {
+        var locksListSize: Int
+        synchronized(this) {
+            locksListSize = mVolumeLock.size
+        }
+
+        if (locksListSize > 0) {
             return
         }
 

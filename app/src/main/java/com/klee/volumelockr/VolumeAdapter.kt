@@ -133,17 +133,21 @@ class VolumeAdapter(
     }
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
-        mService?.addLock(volume.stream, volume.value)
-        adjustService()
-        adjustNotification()
-        holder.binding.seekBar.isEnabled = false
+        mService?.let {
+            it.addLock(volume.stream, volume.value)
+            adjustService()
+            adjustNotification()
+            holder.binding.seekBar.isEnabled = false
+        }
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
-        mService?.removeLock(volume.stream)
-        adjustService()
-        adjustNotification()
-        holder.binding.seekBar.isEnabled = true
+        mService?.let {
+            it.removeLock(volume.stream)
+            adjustService()
+            adjustNotification()
+            holder.binding.seekBar.isEnabled = true
+        }
     }
 
     private fun isPasswordProtected(): Boolean {
