@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Volume">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".VolumeService" />
+        <service android:name=".service.VolumeService" />
 
         <receiver
             android:name=".BootReceiver"

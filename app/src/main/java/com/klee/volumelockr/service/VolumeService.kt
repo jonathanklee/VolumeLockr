@@ -1,4 +1,4 @@
-package com.klee.volumelockr
+package com.klee.volumelockr.service
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -21,6 +21,9 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.klee.volumelockr.R
+import com.klee.volumelockr.Volume
+import com.klee.volumelockr.ui.MainActivity
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.collections.HashMap

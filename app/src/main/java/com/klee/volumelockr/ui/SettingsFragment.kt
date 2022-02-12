@@ -1,4 +1,4 @@
-package com.klee.volumelockr
+package com.klee.volumelockr.ui
 
 import android.app.AlertDialog
 import android.content.Context
@@ -11,6 +11,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.klee.volumelockr.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

@@ -10,6 +10,8 @@ import androidx.annotation.MainThread
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.volumelockr.databinding.VolumeCardBinding
+import com.klee.volumelockr.service.VolumeService
+import com.klee.volumelockr.ui.SettingsFragment
 
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,

@@ -1,4 +1,4 @@
-package com.klee.volumelockr
+package com.klee.volumelockr.ui
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -11,6 +11,8 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import com.klee.volumelockr.R
+import com.klee.volumelockr.service.VolumeService
 
 class MainActivity : AppCompatActivity() {
 

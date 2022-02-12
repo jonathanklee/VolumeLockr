@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/volumeSliderFragment"
-        android:name="com.klee.volumelockr.VolumeSliderFragment"
+        android:name="com.klee.volumelockr.ui.VolumeSliderFragment"
         android:label="VolumeSliderFragment">
         <action
             android:id="@+id/action_x_to_about_libs"
@@ -21,7 +21,7 @@
 
     <fragment
       android:id="@+id/settingsFragment"
-      android:name="com.klee.volumelockr.SettingsFragment"
+      android:name="com.klee.volumelockr.ui.SettingsFragment"
       android:label="SettingsFragment" />
 
 </navigation>
