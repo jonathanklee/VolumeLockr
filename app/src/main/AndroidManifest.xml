@@ -15,7 +15,6 @@
         android:theme="@style/Theme.Volume">
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
