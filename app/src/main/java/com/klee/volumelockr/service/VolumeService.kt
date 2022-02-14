@@ -167,12 +167,16 @@ class VolumeService : Service() {
 
     @WorkerThread
     private fun checkVolumes() {
+
+        var volumeLock: HashMap<Int, Int>
         synchronized(this) {
-            for ((stream, volume) in mVolumeLock) {
-                if (mAudioManager.getStreamVolume(stream) != volume) {
-                    mAudioManager.setStreamVolume(stream, volume, 0)
-                    invokeVolumeListenerCallback()
-                }
+            volumeLock = mVolumeLock
+        }
+
+        for ((stream, volume) in volumeLock) {
+            if (mAudioManager.getStreamVolume(stream) != volume) {
+                mAudioManager.setStreamVolume(stream, volume, 0)
+                invokeVolumeListenerCallback()
             }
         }
     }
