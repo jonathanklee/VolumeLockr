@@ -83,6 +83,10 @@ class VolumeService : Service() {
         }
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
     fun getVolumes(): List<Volume> = mVolumeProvider.getVolumes()
 
     fun startLocking() {
