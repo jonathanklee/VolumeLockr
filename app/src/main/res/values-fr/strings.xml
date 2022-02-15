@@ -5,7 +5,7 @@
     <string name="notification_title">Sonneries / Notifications</string>
     <string name="call_title">Appels</string>
     <string name="title">Titre</string>
-    <string name="lock">Vérouiller</string>
+    <string name="lock">Verrouiller</string>
     <string name="options">Options</string>
     <string name="about">A propos</string>
     <string name="aboutLibraries_description_text">VolumeLockr développé par Jonathan Klee (:</string>
