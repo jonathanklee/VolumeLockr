@@ -195,9 +195,9 @@ class VolumeService : Service() {
 
     private fun invokeVolumeListenerCallback() {
         mVolumeListenerHandler?.removeCallbacksAndMessages(null)
-        mVolumeListenerHandler?.postDelayed({
+        mVolumeListenerHandler?.post {
             mVolumeListener?.invoke()
-        }, 10)
+        }
     }
 
     private val mModeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
