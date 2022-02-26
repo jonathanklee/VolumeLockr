@@ -305,4 +305,9 @@ class VolumeService : Service() {
     override fun onBind(p0: Intent?): IBinder {
         return mBinder
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopLocking()
+    }
 }
