@@ -19,8 +19,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        startService()
     }
 
     override fun onResume() {
@@ -39,11 +37,6 @@ class MainActivity : AppCompatActivity() {
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             PolicyAccessDialog().show(supportFragmentManager, PolicyAccessDialog.TAG)
         }
-    }
-
-    private fun startService() {
-        val intent = Intent(this, VolumeService::class.java)
-        startService(intent)
     }
 
     class PolicyAccessDialog : DialogFragment() {
