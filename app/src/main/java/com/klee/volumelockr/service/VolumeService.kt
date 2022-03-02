@@ -6,7 +6,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
@@ -261,18 +260,13 @@ class VolumeService : Service() {
 
     private fun createNotificationContentIntent(): PendingIntent {
         val intent = Intent(this, MainActivity::class.java)
-        val resultPendingIntent = TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(intent)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                getPendingIntent(
-                    0,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-            }
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
         }
-        return resultPendingIntent
+
+        return PendingIntent.getActivity(this, NOTIFICATION_ID, intent, flags)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
