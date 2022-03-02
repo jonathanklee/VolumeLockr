@@ -81,7 +81,9 @@ class VolumeSliderFragment : Fragment() {
             onServiceConnected()
         }
 
-        override fun onServiceDisconnected(p0: ComponentName?) {}
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            mService = null
+        }
     }
 
     private fun onServiceConnected() {
