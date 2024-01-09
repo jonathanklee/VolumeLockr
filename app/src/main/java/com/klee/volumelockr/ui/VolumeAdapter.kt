@@ -44,7 +44,7 @@ class VolumeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val volume = mVolumeList[position]
         holder.binding.mediaTextView.text = volume.name
-        holder.binding.seekBar.progress = volume.value
+        holder.binding.seekBar.progress = mService?.getLocks()?.get(volume.stream) ?: volume.value
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.binding.seekBar.min = volume.min
         }

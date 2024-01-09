@@ -19,11 +19,13 @@ import android.os.Looper
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
 import com.klee.volumelockr.Volume
 import com.klee.volumelockr.ui.MainActivity
+import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.collections.HashMap
@@ -51,6 +53,15 @@ class VolumeService : Service() {
         const val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
 
         const val MODE_RINGER_SETTING = "mode_ringer"
+
+        fun start(context: Context) {
+            val service = Intent(context, VolumeService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(service)
+            } else {
+                context.startService(service)
+            }
+        }
     }
 
     private lateinit var mAudioManager: AudioManager
@@ -62,6 +73,7 @@ class VolumeService : Service() {
     private var mVolumeLock = HashMap<Int, Int>()
     private var mMode: Int = 2
     private var mTimer: Timer? = null
+    private var mAllowLower = false
 
     override fun onCreate() {
         super.onCreate()
@@ -83,6 +95,9 @@ class VolumeService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER, false)
+
         return START_STICKY
     }
 
@@ -166,7 +181,8 @@ class VolumeService : Service() {
     @Synchronized
     private fun checkVolumes() {
         for ((stream, volume) in mVolumeLock) {
-            if (mAudioManager.getStreamVolume(stream) != volume) {
+            val current = mAudioManager.getStreamVolume(stream)
+            if ((current > volume) || (!mAllowLower && current != volume)) {
                 mAudioManager.setStreamVolume(stream, volume, 0)
                 invokeVolumeListenerCallback()
             }

@@ -16,6 +16,9 @@
     <string name="aboutLibraries_description_showVersion">true</string>
 
     <!-- Preferences -->
+    <string name="limiting_header">Volume Limiting</string>
+    <string name="allow_lower">Allow lower volume than limit</string>
+    <string name="allow_lower_message">Change will take effect when you restart your device</string>
     <string name="password_header">Password</string>
     <string name="password_protected">Enable password protection</string>
     <string name="change_password">Change password</string>
