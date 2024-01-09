@@ -51,6 +51,15 @@ class VolumeService : Service() {
         const val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
 
         const val MODE_RINGER_SETTING = "mode_ringer"
+
+        fun start(context: Context) {
+            val service = Intent(context, VolumeService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(service)
+            } else {
+                context.startService(service)
+            }
+        }
     }
 
     private lateinit var mAudioManager: AudioManager
