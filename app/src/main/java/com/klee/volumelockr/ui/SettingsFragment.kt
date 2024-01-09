@@ -2,6 +2,8 @@ package com.klee.volumelockr.ui
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -12,12 +14,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 import com.klee.volumelockr.R
+import com.klee.volumelockr.service.VolumeService
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
+        const val ALLOW_LOWER = "allow_lower"
     }
 
     private lateinit var passwordProtected: SwitchPreferenceCompat
@@ -48,6 +52,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         passwordProtected.isEnabled = isPasswordSet()
+
+        val allowLower : SwitchPreferenceCompat = findPreference(ALLOW_LOWER)!!
+        allowLower.setOnPreferenceChangeListener {preference, _ ->
+            // re-send start command to service to reload preference
+            VolumeService.start(preference.context)
+            true
+        }
     }
 
     private fun askForPassword() {
