@@ -95,9 +95,7 @@ class VolumeService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER, false)
-
+        loadGeneralPreferences();
         return START_STICKY
     }
 
@@ -168,6 +166,7 @@ class VolumeService : Service() {
     }
 
     private fun loadPreferences() {
+        loadGeneralPreferences();
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
         class Token : TypeToken<HashMap<Int, Int>>()
         val value = sharedPreferences.getString(LOCKS_KEY, "")
@@ -175,6 +174,11 @@ class VolumeService : Service() {
             mVolumeLock = Gson().fromJson(value, Token().type)
             startLocking()
         }
+    }
+
+    private fun loadGeneralPreferences() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER, false)
     }
 
     @WorkerThread
