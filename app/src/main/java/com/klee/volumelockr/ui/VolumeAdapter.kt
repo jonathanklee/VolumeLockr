@@ -5,10 +5,10 @@ import android.media.AudioManager
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.annotation.MainThread
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.slider.Slider
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
 import com.klee.volumelockr.ui.SettingsFragment
@@ -44,11 +44,9 @@ class VolumeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val volume = mVolumeList[position]
         holder.binding.mediaTextView.text = volume.name
-        holder.binding.seekBar.progress = mService?.getLocks()?.get(volume.stream) ?: volume.value
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            holder.binding.seekBar.min = volume.min
-        }
-        holder.binding.seekBar.max = volume.max
+        holder.binding.slider.value = mService?.getLocks()?.get(volume.stream)?.toFloat() ?: volume.value.toFloat()
+        holder.binding.slider.valueFrom = volume.min.toFloat()
+        holder.binding.slider.valueTo = volume.max.toFloat()
 
         registerSeekBarCallback(holder, volume)
         registerSwitchButtonCallback(holder, volume)
@@ -58,28 +56,21 @@ class VolumeAdapter(
         handleRingerMode(holder, volume)
 
         if (isPasswordProtected()) {
-            holder.binding.seekBar.isEnabled = false
+            holder.binding.slider.isEnabled = false
             holder.binding.switchButton.isEnabled = false
         }
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
-        val listener = object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(view: SeekBar?, progress: Int, fromUser: Boolean) {
+        val listener =
+            Slider.OnChangeListener { _, value, _ ->
                 if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == 2) {
-                    mAudioManager.setStreamVolume(volume.stream, progress, 0)
+                    mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
                 }
 
-                volume.value = progress
+                volume.value = value.toInt()
             }
-
-            override fun onStartTrackingTouch(view: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(view: SeekBar?) {
-            }
-        }
-        holder.binding.seekBar.setOnSeekBarChangeListener(listener)
+        holder.binding.slider.addOnChangeListener(listener)
     }
 
     private fun registerSwitchButtonCallback(holder: ViewHolder, volume: Volume) {
@@ -98,7 +89,7 @@ class VolumeAdapter(
             for (key in it) {
                 if (volume.stream == key) {
                     holder.binding.switchButton.isChecked = true
-                    holder.binding.seekBar.isEnabled = false
+                    holder.binding.slider.isEnabled = false
                 }
             }
         }
@@ -128,7 +119,7 @@ class VolumeAdapter(
 
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
         if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
-            holder.binding.seekBar.isEnabled =
+            holder.binding.slider.isEnabled =
                 mService?.getMode() == 2 &&
                 mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
         }
@@ -139,7 +130,7 @@ class VolumeAdapter(
             it.addLock(volume.stream, volume.value)
             adjustService()
             adjustNotification()
-            holder.binding.seekBar.isEnabled = false
+            holder.binding.slider.isEnabled = false
         }
     }
 
@@ -148,7 +139,7 @@ class VolumeAdapter(
             it.removeLock(volume.stream)
             adjustService()
             adjustNotification()
-            holder.binding.seekBar.isEnabled = true
+            holder.binding.slider.isEnabled = true
         }
     }
 
