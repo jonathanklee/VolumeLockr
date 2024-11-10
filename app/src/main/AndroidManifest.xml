@@ -3,6 +3,7 @@
     package="com.klee.volumelockr">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -24,7 +25,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.VolumeService" />
+        <service
+            android:name=".service.VolumeService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
 
         <receiver
             android:name=".BootReceiver"
