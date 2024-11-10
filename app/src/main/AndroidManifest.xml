@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_volumelockr_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.DayNight">
+        android:theme="@style/Theme.VolumeLockr">
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTop"
