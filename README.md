@@ -1,7 +1,7 @@
 # VolumeLockr 
 VolumeLockr allows you to control your Android device volume levels and set locks for each one of them.
 
-<p><img src="https://github.com/jonathanklee/VolumeLockr/blob/main/screenshot.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/VolumeLockr/blob/main/screenshot_night.png" width="200"/></p>
+<p><img src="https://github.com/jonathanklee/VolumeLockr/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/VolumeLockr/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png?raw=true" width="200"/></p>
 
 ## Installation
 You can either download it from F-Droid or build it manually.
