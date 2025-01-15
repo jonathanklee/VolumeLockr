@@ -26,5 +26,9 @@ cd VolumeLockr
 ```
 adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
+# ☕ Coffee
 
+If you want to offer me a coffee for the maintenance of the server part:
+
+[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">](https://liberapay.com/jnthnkl/donate)
 
