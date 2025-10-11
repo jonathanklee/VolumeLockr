@@ -29,6 +29,7 @@ import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.collections.HashMap
+import androidx.core.content.edit
 
 class VolumeService : Service() {
 
@@ -78,14 +79,12 @@ class VolumeService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        mAudioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         mVolumeProvider = VolumeProvider(this)
 
         loadPreferences()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
-        }
+        mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
 
         registerObservers()
 
@@ -95,7 +94,7 @@ class VolumeService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        loadGeneralPreferences();
+        loadGeneralPreferences()
         return START_STICKY
     }
 
@@ -160,13 +159,13 @@ class VolumeService : Service() {
 
     private fun savePreferences() {
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
-        editor.apply()
+        sharedPreferences.edit {
+            putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
+        }
     }
 
     private fun loadPreferences() {
-        loadGeneralPreferences();
+        loadGeneralPreferences()
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
         class Token : TypeToken<HashMap<Int, Int>>()
         val value = sharedPreferences.getString(LOCKS_KEY, "")
@@ -211,9 +210,7 @@ class VolumeService : Service() {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
-            }
+            mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
 
             mModeListener?.invoke()
         }
@@ -237,11 +234,9 @@ class VolumeService : Service() {
         registerObserver(VOLUME_VOICE_HEADSET_SETTING)
         registerObserver(VOLUME_VOICE_BT_SETTING)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            contentResolver.registerContentObserver(
-                Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver
-            )
-        }
+        contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver
+        )
     }
 
     private fun registerObserver(setting: String) {
@@ -252,7 +247,7 @@ class VolumeService : Service() {
     @Synchronized
     fun tryShowNotification() {
 
-        if (mVolumeLock.size == 0) {
+        if (mVolumeLock.isEmpty()) {
             return
         }
 
@@ -271,7 +266,7 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.N)
     @Synchronized
     fun tryHideNotification() {
-        if (mVolumeLock.size > 0) {
+        if (mVolumeLock.isNotEmpty()) {
             return
         }
 
