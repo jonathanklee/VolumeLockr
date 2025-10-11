@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.media.AudioManager
 import android.net.Uri
@@ -19,6 +20,8 @@ import android.os.Looper
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -29,6 +32,7 @@ import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.collections.HashMap
+
 
 class VolumeService : Service() {
 

@@ -3,13 +3,14 @@ package com.klee.volumelockr.ui
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.color.DynamicColors
 import com.klee.volumelockr.R
@@ -17,23 +18,31 @@ import com.klee.volumelockr.service.VolumeService
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val NOTIFICATION_PERMISSION = "android.permission.POST_NOTIFICATIONS"
+        private const val PERMISSION_REQUEST_CODE = 25
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkDoNotDisturbPermission()
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(applicationContext, NOTIFICATION_PERMISSION)
+                == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(arrayOf(NOTIFICATION_PERMISSION), PERMISSION_REQUEST_CODE)
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkDoNotDisturbPermission() {
         val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             PolicyAccessDialog().show(supportFragmentManager, PolicyAccessDialog.TAG)
