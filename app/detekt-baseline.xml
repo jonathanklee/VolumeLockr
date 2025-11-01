@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>TooManyFunctions:VolumeService.kt$VolumeService : Service</ID>
+  </CurrentIssues>
+</SmellBaseline>

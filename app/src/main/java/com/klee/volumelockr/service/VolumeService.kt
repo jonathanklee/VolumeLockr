@@ -17,20 +17,18 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
-import com.klee.volumelockr.ui.Volume
 import com.klee.volumelockr.ui.MainActivity
 import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER
+import com.klee.volumelockr.ui.Volume
 import java.util.Timer
 import java.util.TimerTask
-import kotlin.collections.HashMap
-import androidx.core.content.edit
 
 class VolumeService : Service() {
 
@@ -55,6 +53,8 @@ class VolumeService : Service() {
         const val VOLUME_VOICE_BT_SETTING = "volume_voice_bt_a2dp"
 
         const val MODE_RINGER_SETTING = "mode_ringer"
+
+        const val PERIOD_IN_MS = 25L
 
         fun start(context: Context) {
             val service = Intent(context, VolumeService::class.java)
@@ -112,7 +112,8 @@ class VolumeService : Service() {
                     checkVolumes()
                 }
             },
-            0, 25
+            0,
+            PERIOD_IN_MS
         )
     }
 
@@ -232,7 +233,9 @@ class VolumeService : Service() {
         registerObserver(VOLUME_VOICE_BT_SETTING)
 
         contentResolver.registerContentObserver(
-            Settings.Global.getUriFor(MODE_RINGER_SETTING), true, mModeObserver
+            Settings.Global.getUriFor(MODE_RINGER_SETTING),
+            true,
+            mModeObserver
         )
     }
 
@@ -243,7 +246,6 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun tryShowNotification() {
-
         if (mVolumeLock.isEmpty()) {
             return
         }
@@ -284,7 +286,9 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID, "VolumeLockr service", NotificationManager.IMPORTANCE_LOW
+            NOTIFICATION_CHANNEL_ID,
+            "VolumeLockr service",
+            NotificationManager.IMPORTANCE_LOW
         )
 
         val notificationManager = getSystemService(NotificationManager::class.java)

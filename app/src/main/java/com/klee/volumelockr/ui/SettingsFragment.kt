@@ -20,6 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
         const val ALLOW_LOWER = "allow_lower"
+        const val DELAY_IN_MS = 100L
     }
 
     private lateinit var passwordProtected: SwitchPreferenceCompat
@@ -51,8 +52,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         passwordProtected.isEnabled = isPasswordSet()
 
-        val allowLower : SwitchPreferenceCompat = findPreference(ALLOW_LOWER)!!
-        allowLower.setOnPreferenceChangeListener {preference, _ ->
+        val allowLower: SwitchPreferenceCompat = findPreference(ALLOW_LOWER)!!
+        allowLower.setOnPreferenceChangeListener { preference, _ ->
             // re-send start command to service to reload preference
             VolumeService.start(preference.context)
             true
@@ -60,11 +61,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun askForPassword() {
-
         val editText = EditText(context)
         editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         editText.setOnFocusChangeListener { _, _ ->
-            editText.postDelayed({ showKeyboard(editText) }, 100)
+            editText.postDelayed({ showKeyboard(editText) }, DELAY_IN_MS)
         }
         editText.requestFocus()
 
@@ -86,7 +86,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun checkPassword(challenger: String) {
         val password =
             PreferenceManager.getDefaultSharedPreferences(context).getString(
-                PASSWORD_CHANGE_PREFERENCE, ""
+                PASSWORD_CHANGE_PREFERENCE,
+                ""
             )
 
         val isOk = password == challenger
@@ -96,7 +97,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun isPasswordSet(): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(
-            PASSWORD_CHANGE_PREFERENCE, ""
+            PASSWORD_CHANGE_PREFERENCE,
+            ""
         )?.isNotEmpty()!!
     }
 }

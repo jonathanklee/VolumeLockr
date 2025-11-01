@@ -41,21 +41,20 @@ android {
 }
 
 dependencies {
+    implementation libs.kotlin.stdlib
+    implementation libs.core.ktx
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    implementation libs.legacy.support.v4
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
+    implementation libs.gson
+    implementation libs.aboutlibraries.core
+    implementation libs.aboutlibraries
+    implementation libs.preference.ktx
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.mikepenz:aboutlibraries-core:8.9.0'
-    implementation 'com.mikepenz:aboutlibraries:8.9.0'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
 }
