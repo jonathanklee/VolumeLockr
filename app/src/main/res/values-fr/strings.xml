@@ -13,8 +13,11 @@
     <string name="dialog_allow">Autoriser</string>
 
     <!-- Preferences -->
+    <string name="allow_lower_message">"Le changement sera pris en compte après "</string>
     <string name="password_header">Mot de passe</string>
     <string name="password_protected">Activer la protection par mot de passe</string>
     <string name="change_password">Changer le mot de passe</string>
     <string name="enter_password">Entrez votre mot de passe</string>
+    <string name="limiting_header">Limite de volume</string>
+    <string name="allow_lower">Autoriser un volume inférieur à la limite</string>
 </resources>
