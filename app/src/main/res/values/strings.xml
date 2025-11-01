@@ -12,13 +12,12 @@
     <string name="dialog_policy_access_title">You must allow VolumeLockr to access Do Not Disturb mode</string>
     <string name="dialog_allow">Allow</string>
 
-    <string name="aboutLibraries_description_showIcon">true</string>
-    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
+    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
 
     <!-- Preferences -->
     <string name="limiting_header">Volume Limiting</string>
     <string name="allow_lower">Allow lower volume than limit</string>
-    <string name="allow_lower_message">Change will take effect when you restart your device</string>
     <string name="password_header">Password</string>
     <string name="password_protected">Enable password protection</string>
     <string name="change_password">Change password</string>
