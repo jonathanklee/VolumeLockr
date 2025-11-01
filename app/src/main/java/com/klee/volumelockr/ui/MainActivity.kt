@@ -3,7 +3,6 @@ package com.klee.volumelockr.ui
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -11,9 +10,7 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.color.DynamicColors
 import com.klee.volumelockr.R
-import com.klee.volumelockr.service.VolumeService
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkDoNotDisturbPermission() {
         val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             PolicyAccessDialog().show(supportFragmentManager, PolicyAccessDialog.TAG)

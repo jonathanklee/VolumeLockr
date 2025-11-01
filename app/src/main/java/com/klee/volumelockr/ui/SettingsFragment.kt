@@ -2,8 +2,6 @@ package com.klee.volumelockr.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -99,6 +97,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun isPasswordSet(): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(
             PASSWORD_CHANGE_PREFERENCE, ""
-        )?.length != 0
+        )?.isNotEmpty()!!
     }
 }

@@ -1,4 +1,4 @@
-package com.klee.volumelockr
+package com.klee.volumelockr.ui
 
 import android.content.Context
 import android.media.AudioManager
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
-import com.klee.volumelockr.ui.SettingsFragment
 
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,
@@ -97,7 +96,7 @@ class VolumeAdapter(
 
     private fun adjustService() {
         mService?.getLocks()?.let {
-            if (it.size > 0) {
+            if (it.isNotEmpty()) {
                 mService?.startLocking()
             } else {
                 mService?.stopLocking()
@@ -108,7 +107,7 @@ class VolumeAdapter(
     private fun adjustNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mService?.getLocks()?.let {
-                if (it.size > 0) {
+                if (it.isNotEmpty()) {
                     mService?.tryShowNotification()
                 } else {
                     mService?.tryHideNotification()
