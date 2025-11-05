@@ -23,9 +23,11 @@ import com.klee.volumelockr.service.VolumeService
 
 class VolumeSliderFragment : Fragment() {
 
-    private lateinit var mBinding: FragmentVolumeSliderBinding
-    private lateinit var mAdapter: VolumeAdapter
+    private var _binding: FragmentVolumeSliderBinding? = null
+    private val binding get() = _binding!!
+    private var mAdapter: VolumeAdapter? = null
     private var mService: VolumeService? = null
+    private var isServiceBound = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,23 +35,29 @@ class VolumeSliderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        mBinding = FragmentVolumeSliderBinding.inflate(layoutInflater)
-        return mBinding.root
+        _binding = FragmentVolumeSliderBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         mService?.let {
-            onServiceConnected()
+            handleServiceConnected()
         } ?: Intent(context, VolumeService::class.java).also { intent ->
             context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
 
+    override fun onPause() {
+        unbindServiceIfNeeded()
+        super.onPause()
+    }
+
     override fun onDestroyView() {
+        unbindServiceIfNeeded()
+        _binding?.recyclerView?.adapter = null
+        _binding = null
         super.onDestroyView()
-        mService?.unregisterOnModeChangeListener()
-        mService?.unregisterOnVolumeChangeListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -67,9 +75,9 @@ class VolumeSliderFragment : Fragment() {
     }
 
     private fun setupRecyclerView(service: VolumeService) {
-        mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
-        mBinding.recyclerView.adapter = mAdapter
+        binding.recyclerView.adapter = mAdapter
     }
 
     private val connection = object : ServiceConnection {
@@ -77,25 +85,43 @@ class VolumeSliderFragment : Fragment() {
         override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
             val binder = service as VolumeService.LocalBinder
             mService = binder.getService()
-            onServiceConnected()
+            isServiceBound = true
+            handleServiceConnected()
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {
+            isServiceBound = false
             mService = null
+            mAdapter = null
         }
     }
 
-    private fun onServiceConnected() {
+    private fun handleServiceConnected() {
         mService?.let {
             setupRecyclerView(it)
 
             mService?.registerOnVolumeChangeListener(Handler(Looper.getMainLooper())) {
-                mAdapter.update(it.getVolumes())
+                mAdapter?.update(it.getVolumes())
             }
 
             mService?.registerOnModeChangeListener {
-                mAdapter.update()
+                mAdapter?.update()
             }
         }
+    }
+
+    private fun unbindServiceIfNeeded() {
+        mService?.unregisterOnModeChangeListener()
+        mService?.unregisterOnVolumeChangeListener()
+
+        if (isServiceBound) {
+            context?.let {
+                runCatching { it.unbindService(connection) }
+            }
+            isServiceBound = false
+        }
+
+        mService = null
+        mAdapter = null
     }
 }
