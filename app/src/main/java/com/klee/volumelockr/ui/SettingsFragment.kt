@@ -85,7 +85,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun checkPassword(challenger: String) {
         val password =
-            PreferenceManager.getDefaultSharedPreferences(context).getString(
+            PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(
                 PASSWORD_CHANGE_PREFERENCE,
                 ""
             )
@@ -96,7 +96,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun isPasswordSet(): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(
+        return PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(
             PASSWORD_CHANGE_PREFERENCE,
             ""
         )?.isNotEmpty()!!
