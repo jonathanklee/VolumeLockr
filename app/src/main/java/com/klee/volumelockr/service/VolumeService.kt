@@ -25,7 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
 import com.klee.volumelockr.ui.MainActivity
-import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER
+import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER_PREFERENCE
 import com.klee.volumelockr.ui.Volume
 import java.util.Timer
 import java.util.TimerTask
@@ -96,7 +96,7 @@ class VolumeService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER, false)
+        mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER_PREFERENCE, false)
 
         return START_STICKY
     }

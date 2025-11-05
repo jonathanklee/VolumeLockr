@@ -19,7 +19,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     companion object {
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
-        const val ALLOW_LOWER = "allow_lower"
+        const val ALLOW_LOWER_PREFERENCE = "allow_lower"
         const val DELAY_IN_MS = 100L
     }
 
@@ -52,7 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         passwordProtected.isEnabled = isPasswordSet()
 
-        val allowLower: SwitchPreferenceCompat = findPreference(ALLOW_LOWER)!!
+        val allowLower: SwitchPreferenceCompat = findPreference(ALLOW_LOWER_PREFERENCE)!!
         allowLower.setOnPreferenceChangeListener { preference, _ ->
             // re-send start command to service to reload preference
             VolumeService.start(preference.context)
