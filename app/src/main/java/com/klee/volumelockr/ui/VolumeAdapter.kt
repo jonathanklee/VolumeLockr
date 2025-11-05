@@ -61,6 +61,7 @@ class VolumeAdapter(
     }
 
     private fun registerSeekBarCallback(holder: ViewHolder, volume: Volume) {
+        holder.binding.slider.clearOnChangeListeners()
         val listener =
             Slider.OnChangeListener { _, value, _ ->
                 if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == 2) {
