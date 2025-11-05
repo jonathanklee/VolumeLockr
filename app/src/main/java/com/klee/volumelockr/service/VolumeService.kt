@@ -105,6 +105,10 @@ class VolumeService : Service() {
 
     @Synchronized
     fun startLocking() {
+        if (mTimer != null) {
+            return
+        }
+
         mTimer = Timer()
         mTimer?.scheduleAtFixedRate(
             object : TimerTask() {
