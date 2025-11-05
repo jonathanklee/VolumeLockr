@@ -243,6 +243,15 @@ class VolumeService : Service() {
         contentResolver.registerContentObserver(fetchUri(setting), true, mVolumeObserver)
     }
 
+    private fun unregisterObservers() {
+        runCatching {
+            contentResolver.unregisterContentObserver(mVolumeObserver)
+        }
+        runCatching {
+            contentResolver.unregisterContentObserver(mModeObserver)
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun tryShowNotification() {
@@ -305,6 +314,7 @@ class VolumeService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterObservers()
         stopLocking()
     }
 }
