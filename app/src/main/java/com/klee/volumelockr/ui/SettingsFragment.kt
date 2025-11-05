@@ -25,12 +25,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var passwordProtected: SwitchPreferenceCompat
     private lateinit var passwordChange: EditTextPreference
+    private lateinit var shouldAllowLower: SwitchPreferenceCompat
+
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
+        shouldAllowLower = findPreference(ALLOW_LOWER_PREFERENCE)!!
         passwordChange = findPreference(PASSWORD_CHANGE_PREFERENCE)!!
         passwordProtected = findPreference(PASSWORD_PROTECTED_PREFERENCE)!!
+
+        shouldAllowLower.setOnPreferenceChangeListener { preferences, _ ->
+            VolumeService.start(preferences.context)
+            true
+        }
 
         passwordChange.isEnabled = !passwordProtected.isChecked
         passwordChange.setOnBindEditTextListener { editText ->
@@ -51,13 +59,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         passwordProtected.isEnabled = isPasswordSet()
-
-        val allowLower: SwitchPreferenceCompat = findPreference(ALLOW_LOWER_PREFERENCE)!!
-        allowLower.setOnPreferenceChangeListener { preference, _ ->
-            // re-send start command to service to reload preference
-            VolumeService.start(preference.context)
-            true
-        }
     }
 
     private fun askForPassword() {
