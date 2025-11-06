@@ -27,7 +27,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var passwordChange: EditTextPreference
     private lateinit var shouldAllowLower: SwitchPreferenceCompat
 
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
