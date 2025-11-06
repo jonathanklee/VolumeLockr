@@ -8,7 +8,7 @@
     <string name="lock">Verrouiller</string>
     <string name="options">Options</string>
     <string name="about">A propos</string>
-    <string name="aboutLibraries_description_text">VolumeLockr développé par Jonathan Klee (:</string>
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
     <string name="dialog_policy_access_title">Vous devez autoriser VolumeLockr à accéder au mode Ne pas déranger</string>
     <string name="dialog_allow">Autoriser</string>
 
