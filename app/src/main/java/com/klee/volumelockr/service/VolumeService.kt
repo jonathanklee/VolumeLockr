@@ -137,16 +137,8 @@ class VolumeService : Service() {
         mVolumeListener = null
     }
 
-    fun registerOnModeChangeListener(listener: () -> Unit) {
-        mModeListener = listener
-    }
-
     fun unregisterOnModeChangeListener() {
         mModeListener = null
-    }
-
-    fun registerOnAllowLowerChangeListener(listener: () -> Unit) {
-        mAllowLowerListener = listener
     }
 
     fun unregisterOnAllowLowerChangeListener() {
