@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.klee.volumelockr"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode 13
         versionName "1.6.3"
         multiDexEnabled true

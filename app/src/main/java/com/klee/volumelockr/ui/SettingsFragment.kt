@@ -4,13 +4,15 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.view.View
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.klee.volumelockr.R
 import com.klee.volumelockr.service.VolumeService
 
@@ -58,6 +60,31 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         passwordProtected.isEnabled = isPasswordSet()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val preferenceList = listView
+        val startPadding = preferenceList.paddingLeft
+        val topPadding = preferenceList.paddingTop
+        val endPadding = preferenceList.paddingRight
+        val bottomPadding = preferenceList.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(preferenceList) { v, windowInsets ->
+            val bars = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.setPadding(
+                startPadding + bars.left,
+                topPadding + bars.top,
+                endPadding + bars.right,
+                bottomPadding + bars.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun askForPassword() {

@@ -14,6 +14,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +39,11 @@ class VolumeSliderFragment : Fragment() {
         setHasOptionsMenu(true)
         _binding = FragmentVolumeSliderBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        handleEdgeToEdgeInsets()
     }
 
     override fun onResume() {
@@ -78,6 +85,29 @@ class VolumeSliderFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
         binding.recyclerView.adapter = mAdapter
+    }
+
+    private fun handleEdgeToEdgeInsets() {
+        val recyclerView = binding.recyclerView
+        val startPadding = recyclerView.paddingLeft
+        val topPadding = recyclerView.paddingTop
+        val endPadding = recyclerView.paddingRight
+        val bottomPadding = recyclerView.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.setPadding(
+                startPadding + bars.left,
+                topPadding + bars.top,
+                endPadding + bars.right,
+                bottomPadding + bars.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private val connection = object : ServiceConnection {
