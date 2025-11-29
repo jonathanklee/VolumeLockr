@@ -128,6 +128,7 @@ class VolumeAdapter(
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
         mService?.let {
             it.addLock(volume.stream, volume.value)
+            VolumeService.start(mContext)
             adjustService()
             adjustNotification()
             holder.binding.slider.isEnabled = false
