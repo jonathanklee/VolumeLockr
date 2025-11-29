@@ -185,10 +185,12 @@ class VolumeService : Service() {
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
         class Token : TypeToken<HashMap<Int, Int>>()
         val value = sharedPreferences.getString(LOCKS_KEY, "")
-        if (!value.isNullOrBlank()) {
-            mVolumeLock = Gson().fromJson(value, Token().type)
-            startLocking()
+        if (value.isNullOrBlank()) {
+            return
         }
+
+        mVolumeLock = Gson().fromJson(value, Token().type)
+        startLocking()
     }
 
     @WorkerThread
