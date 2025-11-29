@@ -107,12 +107,17 @@ class VolumeSliderFragment : Fragment() {
             mService?.registerOnModeChangeListener {
                 mAdapter?.update()
             }
+
+            mService?.registerOnAllowLowerChangeListener {
+                mAdapter?.update()
+            }
         }
     }
 
     private fun unbindServiceIfNeeded() {
         mService?.unregisterOnModeChangeListener()
         mService?.unregisterOnVolumeChangeListener()
+        mService?.unregisterOnAllowLowerChangeListener()
 
         if (isServiceBound) {
             context?.let {

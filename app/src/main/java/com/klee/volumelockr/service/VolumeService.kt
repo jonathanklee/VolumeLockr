@@ -76,6 +76,7 @@ class VolumeService : Service() {
     private var mMode: Int = 2
     private var mTimer: Timer? = null
     private var mAllowLower = false
+    private var mAllowLowerListener: (() -> Unit)? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -84,8 +85,6 @@ class VolumeService : Service() {
         mVolumeProvider = VolumeProvider(this)
 
         loadPreferences()
-
-        mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
 
         registerObservers()
 
@@ -97,6 +96,8 @@ class VolumeService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER_PREFERENCE, false)
+
+        mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
 
         return START_STICKY
     }
@@ -142,6 +143,14 @@ class VolumeService : Service() {
 
     fun unregisterOnModeChangeListener() {
         mModeListener = null
+    }
+
+    fun registerOnAllowLowerChangeListener(listener: () -> Unit) {
+        mAllowLowerListener = listener
+    }
+
+    fun unregisterOnAllowLowerChangeListener() {
+        mAllowLowerListener = null
     }
 
     @Synchronized
