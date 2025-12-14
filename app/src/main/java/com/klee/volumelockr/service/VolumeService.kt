@@ -89,11 +89,13 @@ class VolumeService : Service() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             tryShowNotification()
-            
-            if (mVolumeLock.isEmpty()) {
+        }
+
+        if (mVolumeLock.isEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
-                stopSelf()
             }
+            stopSelf()
         }
     }
 

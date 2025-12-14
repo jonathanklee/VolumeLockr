@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
 import com.klee.volumelockr.service.VolumeService
 
@@ -55,7 +56,7 @@ class VolumeSliderFragment : Fragment() {
     }
 
     private fun setupRecyclerView(service: VolumeService) {
-        val spanCount = if (resources.configuration.screenWidthDp >= 600) 2 else 1
+        val spanCount = if (resources.getBoolean(R.bool.use_two_columns)) 2 else 1
         binding.recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
         binding.recyclerView.adapter = mAdapter

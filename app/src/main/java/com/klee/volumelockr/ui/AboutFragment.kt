@@ -29,13 +29,13 @@ class AboutFragment : Fragment() {
 
             childFragmentManager.beginTransaction()
                 .add(R.id.about_libs_container, libsFragment)
-                .commitNow()
+                .commit()
         }
 
         view.post {
             val recyclerView = findRecyclerView(view)
             recyclerView?.let { rv ->
-                val spanCount = if (resources.configuration.screenWidthDp >= 600) 2 else 1
+                val spanCount = if (resources.getBoolean(R.bool.use_two_columns)) 2 else 1
                 if (spanCount > 1) {
                     rv.layoutManager = GridLayoutManager(requireContext(), spanCount)
                 }
