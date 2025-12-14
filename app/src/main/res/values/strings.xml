@@ -22,14 +22,4 @@
     <string name="allow_lower">Allow lowering volume</string>
 
     <string name="aboutLibraries_description_text">VolumeLockr</string>
-
-    <!-- Legacy / Unused? -->
-    <string name="pref_password_protection">Password protection</string>
-    <string name="pref_password_protection_summary">Require password to unlock volume</string>
-    <string name="pref_create_password">Create password</string>
-    <string name="pref_create_password_summary">Set a password to protect volume changes</string>
-    <string name="pref_change_password">Change password</string>
-    <string name="pref_change_password_summary">Update your existing password</string>
-    <string name="pref_allow_lower_volume">Allow lowering volume</string>
-    <string name="pref_allow_lower_volume_summary">Allow volume to be lowered even if locked</string>
 </resources>
