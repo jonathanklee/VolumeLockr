@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupToolbar()
+        setupNavigation()
         setupWindowInsets()
     }
 
@@ -35,13 +35,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupToolbar() {
+    private fun setupNavigation() {
         setSupportActionBar(binding.toolbar)
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.volumeSliderFragment, R.id.settingsFragment, R.id.about_libraries)
+        )
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.bottomNavigation.setupWithNavController(navController)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainerView) { v, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigation) { v, windowInsets ->
              val bars = windowInsets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                     or WindowInsetsCompat.Type.displayCutout()
