@@ -9,7 +9,12 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            VolumeService.start(context)
+            val prefs = context.getSharedPreferences(VolumeService.APP_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+            val locks = prefs.getString(VolumeService.LOCKS_KEY, "")
+            
+            if (!locks.isNullOrEmpty() && locks != "{}") {
+                VolumeService.start(context)
+            }
         }
     }
 }
