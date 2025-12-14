@@ -1,16 +1,16 @@
 package com.klee.volumelockr.ui
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.InputType
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.preference.EditTextPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.klee.volumelockr.R
 import com.klee.volumelockr.service.VolumeService
 
@@ -24,7 +24,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private lateinit var passwordProtected: SwitchPreferenceCompat
-    private lateinit var passwordChange: EditTextPreference
+    private lateinit var passwordChange: Preference
     private lateinit var shouldAllowLower: SwitchPreferenceCompat
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -40,12 +40,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         passwordChange.isEnabled = !passwordProtected.isChecked
-        passwordChange.setOnBindEditTextListener { editText ->
-            editText.text.clear()
-            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-        }
-        passwordChange.setOnPreferenceChangeListener { _, value ->
-            passwordProtected.isEnabled = value.toString().isNotEmpty()
+        passwordChange.setOnPreferenceClickListener {
+            showChangePasswordDialog()
             true
         }
 
@@ -60,19 +56,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
         passwordProtected.isEnabled = isPasswordSet()
     }
 
-    private fun askForPassword() {
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+    private fun showChangePasswordDialog() {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_password, null)
+        val editText = view.findViewById<EditText>(android.R.id.edit)
+
         editText.setOnFocusChangeListener { _, _ ->
             editText.postDelayed({ showKeyboard(editText) }, DELAY_IN_MS)
         }
         editText.requestFocus()
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.change_password))
+            .setView(view)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                savePassword(editText.text.toString())
+            }
+            .show()
+    }
+
+    private fun savePassword(newPassword: String) {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .edit()
+            .putString(PASSWORD_CHANGE_PREFERENCE, newPassword)
+            .apply()
+        passwordProtected.isEnabled = newPassword.isNotEmpty()
+    }
+
+    private fun askForPassword() {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_password, null)
+        val editText = view.findViewById<EditText>(android.R.id.edit)
+
+        editText.setOnFocusChangeListener { _, _ ->
+            editText.postDelayed({ showKeyboard(editText) }, DELAY_IN_MS)
+        }
+        editText.requestFocus()
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setIcon(R.drawable.ic_lock)
             .setTitle(getString(R.string.enter_password))
             .setCancelable(false)
-            .setView(editText)
-            .setPositiveButton("OK") { _, _ ->
+            .setView(view)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 checkPassword(editText.text.toString())
             }
             .show()

@@ -15,11 +15,9 @@
         app:key="password_protected"
         app:title="@string/password_protected" />
 
-    <EditTextPreference
+    <Preference
         app:key="password"
-        app:title="@string/change_password">
-
-    </EditTextPreference>
+        app:title="@string/change_password" />
 
   </PreferenceCategory>
 
