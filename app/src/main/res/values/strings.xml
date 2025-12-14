@@ -17,6 +17,8 @@
     <string name="password_protected">Enable password protection</string>
     <string name="change_password">Change password</string>
     <string name="enter_password">Enter password</string>
+    <string name="password_too_short">Password must be at least %d characters</string>
+    <string name="password_save_error">Failed to save password</string>
 
     <string name="limiting_header">Volume Limits</string>
     <string name="allow_lower">Allow lowering volume</string>
