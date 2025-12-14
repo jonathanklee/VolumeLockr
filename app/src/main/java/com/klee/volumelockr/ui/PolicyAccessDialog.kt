@@ -1,0 +1,27 @@
+package com.klee.volumelockr.ui
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.DialogFragment
+import com.klee.volumelockr.R
+
+class PolicyAccessDialog : DialogFragment() {
+    companion object {
+        const val TAG = "PolicyAccessDialog"
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(requireContext())
+            .setMessage(getString(R.string.dialog_policy_access_title))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.dialog_allow)) { _, _ ->
+                startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+            }
+            .create()
+}

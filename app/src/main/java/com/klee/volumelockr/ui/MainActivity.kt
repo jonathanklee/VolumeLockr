@@ -1,17 +1,16 @@
 package com.klee.volumelockr.ui
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.app.NotificationManager
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.ActivityMainBinding
 
@@ -20,10 +19,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        handleEdgeToEdgeInsets()
+        setupToolbar()
+        setupWindowInsets()
     }
 
     override fun onResume() {
@@ -32,6 +33,15 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkDoNotDisturbPermission()
         }
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -44,31 +54,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class PolicyAccessDialog : DialogFragment() {
-        companion object {
-            const val TAG = "PolicyAccessDialog"
-        }
-
-        @RequiresApi(Build.VERSION_CODES.M)
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(requireContext())
-                .setMessage(getString(R.string.dialog_policy_access_title))
-                .setCancelable(false)
-                .setPositiveButton(getString(R.string.dialog_allow)) { _, _ ->
-                    startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
-                }
-                .create()
-    }
-
-    private fun handleEdgeToEdgeInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { v, windowInsets ->
             val bars = windowInsets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                     or WindowInsetsCompat.Type.displayCutout()
             )
+            v.setPadding(bars.left, bars.top, bars.right, 0)
+            WindowInsetsCompat.CONSUMED
+        }
 
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainerView) { v, windowInsets ->
+             val bars = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                    or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(bars.left, 0, bars.right, bars.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
