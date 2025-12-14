@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
 import com.klee.volumelockr.service.VolumeService

@@ -3,6 +3,7 @@ package com.klee.volumelockr.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -17,10 +18,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.klee.volumelockr.R
 import com.klee.volumelockr.service.VolumeService
+import java.io.IOException
+import java.security.GeneralSecurityException
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
+        private const val TAG = "SettingsFragment"
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
         const val ALLOW_LOWER_PREFERENCE = "allow_lower"
@@ -78,7 +82,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
-        } catch (e: Exception) {
+        } catch (e: GeneralSecurityException) {
+            Log.e(TAG, "Failed to create encrypted preferences: security error", e)
+            Toast.makeText(context, R.string.password_save_error, Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Log.e(TAG, "Failed to create encrypted preferences: IO error", e)
             Toast.makeText(context, R.string.password_save_error, Toast.LENGTH_LONG).show()
         }
     }
@@ -139,7 +147,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 .apply()
             passwordProtected.isEnabled = newPassword.isNotEmpty()
             true
-        } catch (e: Exception) {
+        } catch (e: GeneralSecurityException) {
+            Log.e(TAG, "Failed to save password: security error", e)
+            Toast.makeText(context, R.string.password_save_error, Toast.LENGTH_SHORT).show()
+            false
+        } catch (e: IOException) {
+            Log.e(TAG, "Failed to save password: IO error", e)
             Toast.makeText(context, R.string.password_save_error, Toast.LENGTH_SHORT).show()
             false
         }
