@@ -90,6 +90,11 @@ class VolumeService : Service() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             tryShowNotification()
+            
+            if (mVolumeLock.isEmpty()) {
+                stopForeground(true)
+                stopSelf()
+            }
         }
     }
 
@@ -262,10 +267,6 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun tryShowNotification() {
-        if (mVolumeLock.isEmpty()) {
-            return
-        }
-
         createNotificationChannel()
         val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(NOTIFICATION_TITLE)
