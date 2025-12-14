@@ -287,6 +287,7 @@ class VolumeService : Service() {
         }
 
         stopForeground(Service.STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun createNotificationContentIntent(): PendingIntent {
