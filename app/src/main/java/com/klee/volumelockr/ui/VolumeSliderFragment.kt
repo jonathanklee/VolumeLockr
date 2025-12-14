@@ -55,7 +55,8 @@ class VolumeSliderFragment : Fragment() {
     }
 
     private fun setupRecyclerView(service: VolumeService) {
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val spanCount = if (resources.configuration.screenWidthDp >= 600) 2 else 1
+        binding.recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
         binding.recyclerView.adapter = mAdapter
     }

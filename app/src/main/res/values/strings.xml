@@ -1,25 +1,18 @@
 <resources>
     <string name="app_name">VolumeLockr</string>
-    <string name="media_title">Media</string>
-    <string name="alarm_title">Alarm</string>
-    <string name="notification_title">Ringtones / Notifications</string>
-    <string name="call_title">Voice calls</string>
-    <string name="title">Title</string>
+    <string name="title">VolumeLockr</string>
     <string name="lock">Lock</string>
-    <string name="options">Settings</string>
+    <string name="options">Options</string>
     <string name="about">About</string>
-    <string name="aboutLibraries_description_text">VolumeLockr</string>
-    <string name="dialog_policy_access_title">You must allow VolumeLockr to access Do Not Disturb mode</string>
+    <string name="home">Home</string>
+    <string name="dialog_policy_access_title">To detect Ringer Mode changes (Silent, Vibrate, Normal), VolumeLockr needs \"Do Not Disturb\" access.</string>
     <string name="dialog_allow">Allow</string>
-
-    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
-    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
-
-    <!-- Preferences -->
-    <string name="limiting_header">Volume Limiting</string>
-    <string name="allow_lower">Allow lower volume than limit</string>
-    <string name="password_header">Password</string>
-    <string name="password_protected">Enable password protection</string>
-    <string name="change_password">Change password</string>
-    <string name="enter_password">Enter your password</string>
+    <string name="pref_password_protection">Password protection</string>
+    <string name="pref_password_protection_summary">Require password to unlock volume</string>
+    <string name="pref_create_password">Create password</string>
+    <string name="pref_create_password_summary">Set a password to protect volume changes</string>
+    <string name="pref_change_password">Change password</string>
+    <string name="pref_change_password_summary">Update your existing password</string>
+    <string name="pref_allow_lower_volume">Allow lowering volume</string>
+    <string name="pref_allow_lower_volume_summary">Allow volume to be lowered even if locked</string>
 </resources>

@@ -3,7 +3,7 @@
     <item
         android:id="@+id/volumeSliderFragment"
         android:icon="@drawable/ic_home"
-        android:title="@string/app_name" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/settingsFragment"

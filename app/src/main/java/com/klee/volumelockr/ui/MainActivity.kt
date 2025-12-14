@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationBarView
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.ActivityMainBinding
 
@@ -44,7 +45,9 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.volumeSliderFragment, R.id.settingsFragment, R.id.about_libraries)
         )
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.bottomNavigation.setupWithNavController(navController)
+
+        val navView: NavigationBarView? = binding.bottomNavigation ?: binding.navigationRail
+        navView?.setupWithNavController(navController)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -67,13 +70,27 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigation) { v, windowInsets ->
-             val bars = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-                    or WindowInsetsCompat.Type.displayCutout()
-            )
-            v.setPadding(bars.left, 0, bars.right, bars.bottom)
-            WindowInsetsCompat.CONSUMED
+        binding.bottomNavigation?.let { view ->
+            ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+                val bars = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+                )
+                v.setPadding(bars.left, 0, bars.right, bars.bottom)
+                WindowInsetsCompat.CONSUMED
+            }
+        }
+
+        binding.navigationRail?.let { view ->
+            ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+                val bars = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+                )
+                // Rail needs top and bottom padding usually, and left padding
+                v.setPadding(bars.left, bars.top, 0, bars.bottom)
+                WindowInsetsCompat.CONSUMED
+            }
         }
     }
 }
