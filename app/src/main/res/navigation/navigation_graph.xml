@@ -5,12 +5,15 @@
     android:id="@+id/navigation_graph"
     app:startDestination="@id/volumeSliderFragment">
 
-    <include app:graph="@navigation/aboutlibs_navigation" />
+    <fragment
+        android:id="@+id/about_libraries"
+        android:name="com.klee.volumelockr.ui.AboutFragment"
+        android:label="@string/about" />
 
     <fragment
         android:id="@+id/volumeSliderFragment"
         android:name="com.klee.volumelockr.ui.VolumeSliderFragment"
-        android:label="VolumeSliderFragment">
+        android:label="@string/app_name">
         <action
             android:id="@+id/action_x_to_about_libs"
             app:destination="@id/about_libraries" />
@@ -22,6 +25,6 @@
     <fragment
       android:id="@+id/settingsFragment"
       android:name="com.klee.volumelockr.ui.SettingsFragment"
-      android:label="SettingsFragment" />
+      android:label="@string/options" />
 
 </navigation>

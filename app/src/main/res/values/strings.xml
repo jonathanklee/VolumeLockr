@@ -7,6 +7,23 @@
     <string name="home">Home</string>
     <string name="dialog_policy_access_title">To detect Ringer Mode changes (Silent, Vibrate, Normal), VolumeLockr needs \"Do Not Disturb\" access.</string>
     <string name="dialog_allow">Allow</string>
+
+    <string name="media_title">Media</string>
+    <string name="alarm_title">Alarm</string>
+    <string name="notification_title">Ring / Notification</string>
+    <string name="call_title">Call</string>
+
+    <string name="password_header">Password</string>
+    <string name="password_protected">Enable password protection</string>
+    <string name="change_password">Change password</string>
+    <string name="enter_password">Enter password</string>
+
+    <string name="limiting_header">Volume Limits</string>
+    <string name="allow_lower">Allow lowering volume</string>
+
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+    <!-- Legacy / Unused? -->
     <string name="pref_password_protection">Password protection</string>
     <string name="pref_password_protection_summary">Require password to unlock volume</string>
     <string name="pref_create_password">Create password</string>

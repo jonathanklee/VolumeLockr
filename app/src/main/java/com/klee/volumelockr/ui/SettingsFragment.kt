@@ -1,18 +1,17 @@
 package com.klee.volumelockr.ui
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.widget.FrameLayout
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.klee.volumelockr.R
 import com.klee.volumelockr.service.VolumeService
 
@@ -62,31 +61,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         passwordProtected.isEnabled = isPasswordSet()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val preferenceList = listView
-        val startPadding = preferenceList.paddingLeft
-        val topPadding = preferenceList.paddingTop
-        val endPadding = preferenceList.paddingRight
-        val bottomPadding = preferenceList.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(preferenceList) { v, windowInsets ->
-            val bars = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
-
-            v.setPadding(
-                startPadding + bars.left,
-                topPadding + bars.top,
-                endPadding + bars.right,
-                bottomPadding + bars.bottom
-            )
-
-            WindowInsetsCompat.CONSUMED
-        }
-    }
-
     private fun askForPassword() {
         val editText = EditText(context)
         editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -95,10 +69,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         editText.requestFocus()
 
-        AlertDialog.Builder(context)
+        val container = FrameLayout(requireContext())
+        val params = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+        params.leftMargin = margin
+        params.rightMargin = margin
+        editText.layoutParams = params
+        container.addView(editText)
+
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.enter_password))
             .setCancelable(false)
-            .setView(editText)
+            .setView(container)
             .setPositiveButton("OK") { _, _ ->
                 checkPassword(editText.text.toString())
             }
