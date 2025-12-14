@@ -3,10 +3,10 @@ package com.klee.volumelockr.ui
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.FrameLayout
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -62,28 +62,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun askForPassword() {
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_password, null)
+        val editText = view.findViewById<EditText>(R.id.password_input)
+        
         editText.setOnFocusChangeListener { _, _ ->
             editText.postDelayed({ showKeyboard(editText) }, DELAY_IN_MS)
         }
         editText.requestFocus()
 
-        val container = FrameLayout(requireContext())
-        val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        )
-        val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-        params.leftMargin = margin
-        params.rightMargin = margin
-        editText.layoutParams = params
-        container.addView(editText)
-
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered)
+            .setIcon(R.drawable.ic_lock)
             .setTitle(getString(R.string.enter_password))
             .setCancelable(false)
-            .setView(container)
+            .setView(view)
             .setPositiveButton("OK") { _, _ ->
                 checkPassword(editText.text.toString())
             }
