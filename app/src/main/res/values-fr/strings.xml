@@ -19,4 +19,7 @@
     <string name="enter_password">Entrez votre mot de passe</string>
     <string name="limiting_header">Limite de volume</string>
     <string name="allow_lower">Autoriser un volume inférieur à la limite</string>
+    <string name="home">Accueil</string>
+    <string name="password_too_short">Le mot de passe doit contenir au moins %d caractères</string>
+    <string name="password_save_error">Échec de l\'enregistrement du mot de passe</string>
 </resources>
