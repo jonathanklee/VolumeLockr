@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/volumeSliderFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/options" />
+
+    <item
+        android:id="@+id/about_libraries"
+        android:icon="@drawable/ic_info"
+        android:title="@string/about" />
+</menu>

@@ -53,6 +53,7 @@ dependencies {
     implementation libs.aboutlibraries.core
     implementation libs.aboutlibraries
     implementation libs.preference.ktx
+    implementation libs.security.crypto
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

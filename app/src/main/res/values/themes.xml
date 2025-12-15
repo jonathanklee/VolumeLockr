@@ -1,11 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.VolumeLockr" parent="Theme.Material3.DynamicColors.DayNight">
+    <style name="Theme.VolumeLockr" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <item name="preferenceTheme">@style/ThemeOverlay.App.Preference</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
     <style name="ThemeOverlay.App.Preference" parent="PreferenceThemeOverlay">
         <item name="switchPreferenceCompatStyle">@style/PreferenceMaterialSwitch</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog.Centered</item>
     </style>
 
     <style name="PreferenceMaterialSwitch" parent="@style/Preference.SwitchPreferenceCompat.Material">

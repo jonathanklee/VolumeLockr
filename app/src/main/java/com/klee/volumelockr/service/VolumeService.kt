@@ -1,6 +1,5 @@
 package com.klee.volumelockr.service
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -90,6 +89,13 @@ class VolumeService : Service() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             tryShowNotification()
+        }
+
+        if (mVolumeLock.isEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                stopForeground(Service.STOP_FOREGROUND_REMOVE)
+            }
+            stopSelf()
         }
     }
 
@@ -262,10 +268,6 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun tryShowNotification() {
-        if (mVolumeLock.isEmpty()) {
-            return
-        }
-
         createNotificationChannel()
         val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(NOTIFICATION_TITLE)
@@ -277,7 +279,6 @@ class VolumeService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
-    @SuppressLint("WrongConstant")
     @RequiresApi(Build.VERSION_CODES.N)
     @Synchronized
     fun tryHideNotification() {
@@ -285,7 +286,8 @@ class VolumeService : Service() {
             return
         }
 
-        stopForeground(NOTIFICATION_ID)
+        stopForeground(Service.STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun createNotificationContentIntent(): PendingIntent {

@@ -16,6 +16,7 @@ legacySupportV4 = "1.0.0"
 material = "1.13.0"
 navigationFragmentKtx = "2.9.5"
 preferenceKtx = "1.2.1"
+securityCrypto = "1.1.0-alpha06"
 
 [libraries]
 aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "aboutlibraries" }
@@ -37,6 +38,7 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
+security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

@@ -9,16 +9,9 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
 import com.klee.volumelockr.service.VolumeService
@@ -36,14 +29,8 @@ class VolumeSliderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setHasOptionsMenu(true)
         _binding = FragmentVolumeSliderBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        handleEdgeToEdgeInsets()
     }
 
     override fun onResume() {
@@ -67,47 +54,11 @@ class VolumeSliderFragment : Fragment() {
         super.onDestroyView()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options, menu)
-        super.onCreateOptionsMenu(menu, menuInflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.about -> findNavController().navigate(R.id.action_x_to_about_libs)
-            R.id.options -> findNavController().navigate(R.id.action_sliders_to_settings)
-        }
-        return true
-    }
-
     private fun setupRecyclerView(service: VolumeService) {
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val spanCount = if (resources.getBoolean(R.bool.use_two_columns)) 2 else 1
+        binding.recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
         mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext())
         binding.recyclerView.adapter = mAdapter
-    }
-
-    private fun handleEdgeToEdgeInsets() {
-        val recyclerView = binding.recyclerView
-        val startPadding = recyclerView.paddingLeft
-        val topPadding = recyclerView.paddingTop
-        val endPadding = recyclerView.paddingRight
-        val bottomPadding = recyclerView.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
-            val bars = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
-
-            v.setPadding(
-                startPadding + bars.left,
-                topPadding + bars.top,
-                endPadding + bars.right,
-                bottomPadding + bars.bottom
-            )
-
-            WindowInsetsCompat.CONSUMED
-        }
     }
 
     private val connection = object : ServiceConnection {
