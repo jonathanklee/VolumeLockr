@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <string name="title">VolumeLockr</string>
+    <string name="lock">Блокировка</string>
+    <string name="options">Настройки</string>
+    <string name="about">О приложении</string>
+    <string name="home">Домашняя</string>
+    <string name="dialog_policy_access_title">Для обнаружения изменений режима звонков (Беззвучный, Вибрация, Обычный) VolumeLockr необходим доступ в режиме «Не беспокоить».</string>
+    <string name="dialog_allow">Разрешить</string>
+
+    <string name="media_title">Медиа</string>
+    <string name="alarm_title">Будильник</string>
+    <string name="notification_title">Звонок / Уведомление</string>
+    <string name="call_title">Вызов</string>
+    <!-- Preferences -->
+    <string name="password_header">Пароль</string>
+    <string name="password_protected">Включить защиту паролем</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="password_too_short">Пароль должен содержать не менее %d символов</string>
+    <string name="password_save_error">Не удалось сохранить пароль</string>
+
+    <string name="limiting_header">Ограничения громкости</string>
+    <string name="allow_lower">Разрешить снижение громкости</string>
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+</resources>
