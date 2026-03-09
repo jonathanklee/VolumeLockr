@@ -276,7 +276,15 @@ class VolumeService : Service() {
             .setContentIntent(createNotificationContentIntent())
             .build()
 
-        startForeground(NOTIFICATION_ID, notification)
+        try {
+            startForeground(NOTIFICATION_ID, notification)
+        } catch (error: IllegalStateException) {
+            if (!isForegroundStartRestriction(error)) {
+                throw error
+            }
+
+            stopSelf()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -311,6 +319,10 @@ class VolumeService : Service() {
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun isForegroundStartRestriction(error: IllegalStateException): Boolean {
+        return error.javaClass.name == "android.app.ForegroundServiceStartNotAllowedException"
     }
 
     inner class LocalBinder : Binder() {
