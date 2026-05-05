@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <string name="title">VolumeLockr</string>
+    <string name="lock">قفل</string>
+    <string name="options">خيارات</string>
+    <string name="about">عن</string>
+    <string name="home">الرئيسية</string>
+    <string name="dialog_policy_access_title">لكي يتم اكتشاف تغييرات وضع الرنين (صامت، اهتزاز، عادي)، يحتاج VolumeLockr إلى إذن \"عدم الإزعاج \"</string>
+    <string name="dialog_allow">سماح</string>
+
+    <string name="media_title">الوسائط</string>
+    <string name="alarm_title">المنبه</string>
+    <string name="notification_title">الرنين / Notification</string>
+    <string name="call_title">المكالمات</string>
+
+    <string name="password_header">كلمة السر</string>
+    <string name="password_protected">تمكين الحماية بكلمة سر</string>
+    <string name="change_password">تغيير كلمة السر</string>
+    <string name="enter_password">أدخل كلمة السر</string>
+    <string name="password_too_short">يجب أن تكون كلمة المرور مكونة من %d خانة على الأقل</string>
+    <string name="password_save_error">فشل حفظ كلمة السر</string>
+
+    <string name="limiting_header">حدود الصوت</string>
+    <string name="allow_lower">السماح بخفض مستوى الصوت</string>
+
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
+</resources>
