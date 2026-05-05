@@ -17,7 +17,7 @@
     <string name="password_protected">تمكين الحماية بكلمة سر</string>
     <string name="change_password">تغيير كلمة السر</string>
     <string name="enter_password">أدخل كلمة السر</string>
-    <string name="password_too_short">يجب أن تكون كلمة المرور مكونة من %d خانة على الأقل</string>
+    <string name="password_too_short">يجب أن تكون كلمة السر مكونة من %d خانة على الأقل</string>
     <string name="password_save_error">فشل حفظ كلمة السر</string>
 
     <string name="limiting_header">حدود الصوت</string>
