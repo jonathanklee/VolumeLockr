@@ -10,7 +10,7 @@
 
     <string name="media_title">الوسائط</string>
     <string name="alarm_title">المنبه</string>
-    <string name="notification_title">الرنين / Notification</string>
+    <string name="notification_title">الرنين / الإشعارات</string>
     <string name="call_title">المكالمات</string>
 
     <string name="password_header">كلمة السر</string>
