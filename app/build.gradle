@@ -7,7 +7,6 @@ plugins {
 
 android {
     compileSdk 36
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.klee.volumelockr"
@@ -20,10 +19,39 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Release signing: read credentials from local.properties or environment variables.
+    // DO NOT commit keystore files or passwords to the repository.
+    // See README.md → "Build from Source" → "Signing the release APK" for setup instructions.
+    def keystorePropertiesFile = rootProject.file('release/keystore.properties')
+
+    signingConfigs {
+        release {
+            // Dummy values; replaced at build time if keystore.properties exists.
+            storeFile file('dummy.keystore')
+            storePassword 'dummy'
+            keyAlias 'dummy'
+            keyPassword 'dummy'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Override signing config only if BOTH keystore.properties AND the keystore file exist
+    if (keystorePropertiesFile.exists()) {
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        def keystoreFile = rootProject.file(keystoreProperties['storeFile'])
+        if (keystoreFile.exists()) {
+            signingConfigs.release.storeFile = keystoreFile
+            signingConfigs.release.storePassword = keystoreProperties['storePassword']
+            signingConfigs.release.keyAlias = keystoreProperties['keyAlias']
+            signingConfigs.release.keyPassword = keystoreProperties['keyPassword']
+            buildTypes.release.signingConfig = signingConfigs.release
         }
     }
     compileOptions {

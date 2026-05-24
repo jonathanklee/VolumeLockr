@@ -22,15 +22,25 @@ class VolumeAdapter(
     private var mAudioManager: AudioManager =
         mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-    @MainThread
-    fun update(volumes: List<Volume>) {
-        mVolumeList = volumes
-        update()
+    /** 缓存密码保护状态，避免每次 bind 都读取 SharedPreferences */
+    private var mPasswordProtected: Boolean? = null
+
+    fun invalidatePasswordProtected() {
+        mPasswordProtected = null
     }
 
     @MainThread
-    fun update() {
-        notifyDataSetChanged()
+    fun update(volumes: List<Volume>) {
+        // 找出实际变化的项，避免整体刷新
+        val changedPositions = mutableListOf<Int>()
+        for (i in volumes.indices) {
+            if (i >= mVolumeList.size || volumes[i].value != mVolumeList[i].value
+                || volumes[i].locked != mVolumeList[i].locked) {
+                changedPositions.add(i)
+            }
+        }
+        mVolumeList = volumes
+        changedPositions.forEach { notifyItemChanged(it) }
     }
 
     inner class ViewHolder(val binding: VolumeCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -84,14 +94,9 @@ class VolumeAdapter(
     }
 
     private fun loadLockFromService(holder: ViewHolder, volume: Volume) {
-        val locks = mService?.getLocks()?.keys
-        locks?.let {
-            for (key in it) {
-                if (volume.stream == key) {
-                    holder.binding.switchButton.isChecked = true
-                    holder.binding.slider.isEnabled = false
-                }
-            }
+        if (mService?.getLocks()?.containsKey(volume.stream) == true) {
+            holder.binding.switchButton.isChecked = true
+            holder.binding.slider.isEnabled = false
         }
     }
 
@@ -128,6 +133,7 @@ class VolumeAdapter(
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
         mService?.let {
             it.addLock(volume.stream, volume.value)
+            // startService 确保服务进入 started 状态，Activity 解绑后不销毁 → 后台锁定持续有效
             VolumeService.start(mContext)
             adjustService()
             adjustNotification()
@@ -145,8 +151,10 @@ class VolumeAdapter(
     }
 
     private fun isPasswordProtected(): Boolean {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
-        return sharedPreferences.getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
+        mPasswordProtected = mPasswordProtected
+            ?: PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
+        return mPasswordProtected!!
     }
 
     override fun getItemCount(): Int {

@@ -23,5 +23,12 @@
     <string name="limiting_header">Volume Limits</string>
     <string name="allow_lower">Allow lowering volume</string>
 
+    <string name="hide_recents_header">Recent Tasks</string>
+    <string name="hide_recents_title">Hide from recent tasks</string>
+    <string name="hide_recents_summary">Remove app preview and icon from the recent apps list</string>
+
+    <string name="hide_recents_enabled">App hidden from recent tasks</string>
+    <string name="hide_recents_disabled">App visible in recent tasks</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 </resources>

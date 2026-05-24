@@ -1,25 +1,39 @@
+<!--
+  VolumeLockr - 简体中文翻译
+  翻译者: @liket (https://github.com/liket)
+  校对状态: 已完成
+-->
 <resources>
     <string name="app_name">音量锁定器</string>
-    <string name="media_title">媒体音量</string>
-    <string name="alarm_title">闹钟音量</string>
-    <string name="notification_title">铃声 / 通知音量</string>
-    <string name="call_title">通话音量</string>
     <string name="title">音量锁定器</string>
     <string name="lock">锁定</string>
     <string name="options">选项</string>
     <string name="about">关于</string>
-    <string name="aboutLibraries_description_text">音量锁定器</string>
-    <string name="dialog_policy_access_title">为了检测响铃模式的变化（静音、振动、正常），音量锁定器需要"勿扰模式"访问权限。</string>
+    <string name="home">首页</string>
+    <string name="dialog_policy_access_title">为了检测铃声模式变化（静音、振动、正常），音量锁定器需要"勿扰模式"权限。</string>
     <string name="dialog_allow">允许</string>
 
-    <!-- 偏好设置 -->
+    <string name="media_title">媒体音量</string>
+    <string name="alarm_title">闹钟音量</string>
+    <string name="notification_title">铃声 / 通知音量</string>
+    <string name="call_title">通话音量</string>
+
     <string name="password_header">密码</string>
     <string name="password_protected">启用密码保护</string>
     <string name="change_password">修改密码</string>
     <string name="enter_password">输入密码</string>
-    <string name="limiting_header">音量限制</string>
-    <string name="allow_lower">允许降低音量</string>
-    <string name="home">首页</string>
     <string name="password_too_short">密码必须至少包含 %d 个字符</string>
     <string name="password_save_error">保存密码失败</string>
+
+    <string name="limiting_header">音量限制</string>
+    <string name="allow_lower">允许降低音量</string>
+
+    <string name="hide_recents_header">最近任务</string>
+    <string name="hide_recents_title">在最近任务列表中隐藏</string>
+    <string name="hide_recents_summary">在多任务视图中移除应用的预览界面和图标</string>
+
+    <string name="hide_recents_enabled">应用已从最近任务中隐藏</string>
+    <string name="hide_recents_disabled">应用已显示在最近任务中</string>
+
+    <string name="aboutLibraries_description_text">音量锁定器</string>
 </resources>

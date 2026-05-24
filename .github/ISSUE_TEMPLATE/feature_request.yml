@@ -1,0 +1,44 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your feature suggestion! Please describe it clearly so we can evaluate it.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this feature solve? Is it related to a limitation or annoyance?
+      placeholder: "E.g., I want to lock volume on a per-app basis, not system-wide."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe how you think this should work.
+      placeholder: "E.g., Add an 'App-specific locks' section where users can choose the target app."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other solutions or workarounds you've considered.
+      placeholder: "E.g., Using Android's per-app volume control, but it doesn't persist."
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have searched existing issues to make sure this hasn't been requested before
+          required: true
+        - label: This feature would be useful to other users, not just me
+          required: false

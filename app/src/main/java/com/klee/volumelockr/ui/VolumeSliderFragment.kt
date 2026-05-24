@@ -84,10 +84,16 @@ class VolumeSliderFragment : Fragment() {
             mService?.registerOnVolumeChangeListener(Handler(Looper.getMainLooper())) {
                 mAdapter?.update(it.getVolumes())
             }
+
+            // bind-only 流程无 onStartCommand，需手动启动轮询
+            if (it.getLocks().isNotEmpty()) {
+                it.startLocking()
+            }
         }
     }
 
     private fun unbindServiceIfNeeded() {
+        mService?.unregisterOnVolumeChangeListener()
         mService?.unregisterOnModeChangeListener()
 
         if (isServiceBound) {

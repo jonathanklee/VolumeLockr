@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -28,6 +29,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
         const val ALLOW_LOWER_PREFERENCE = "allow_lower"
+        const val HIDE_RECENTS_PREFERENCE = "hide_recents_enabled"
         const val DELAY_IN_MS = 100L
         const val MIN_PASSWORD_LENGTH = 6
         private const val ENCRYPTED_PREFS_FILE = "secure_settings"
@@ -38,6 +40,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var passwordProtected: SwitchPreferenceCompat
     private lateinit var passwordChange: Preference
     private lateinit var shouldAllowLower: SwitchPreferenceCompat
+    private lateinit var hideRecents: SwitchPreferenceCompat
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -46,12 +49,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         shouldAllowLower = findPreference(ALLOW_LOWER_PREFERENCE)!!
         passwordChange = findPreference(PASSWORD_CHANGE_PREFERENCE)!!
         passwordProtected = findPreference(PASSWORD_PROTECTED_PREFERENCE)!!
+        hideRecents = findPreference(HIDE_RECENTS_PREFERENCE)!!
 
+        setupAllowLowerPreference()
+        setupPasswordPreferences()
+        setupHideRecentsPreference()
+    }
+
+    private fun setupAllowLowerPreference() {
         shouldAllowLower.setOnPreferenceChangeListener { preferences, _ ->
             VolumeService.start(preferences.context)
             true
         }
+    }
 
+    private fun setupPasswordPreferences() {
         passwordChange.isEnabled = !passwordProtected.isChecked
         passwordChange.setOnPreferenceClickListener {
             showChangePasswordDialog()
@@ -67,6 +79,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         passwordProtected.isEnabled = isPasswordSet()
+    }
+
+    private fun setupHideRecentsPreference() {
+        hideRecents.setOnPreferenceChangeListener { _, newValue ->
+            val enabled = newValue as Boolean
+            // 使用 AppTask.setExcludeFromRecents 立即生效
+            val activity = requireActivity() as? MainActivity
+            activity?.setExcludeFromRecents(enabled)
+
+            if (enabled) {
+                Toast.makeText(context, R.string.hide_recents_enabled, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, R.string.hide_recents_disabled, Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
     }
 
     private fun initializeEncryptedPrefs() {
