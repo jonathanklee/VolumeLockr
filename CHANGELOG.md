@@ -101,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/jonathanklee/VolumeLockr/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/xunnv/VolumeLockr/compare/v1.7.1-zh...HEAD
+[1.7.1-zh]: https://github.com/xunnv/VolumeLockr/compare/v1.7.1...v1.7.1-zh
 [1.7.1]: https://github.com/jonathanklee/VolumeLockr/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/jonathanklee/VolumeLockr/compare/v1.6.4...v1.7.0
 [1.6.4]: https://github.com/jonathanklee/VolumeLockr/compare/v1.6.0...v1.6.4

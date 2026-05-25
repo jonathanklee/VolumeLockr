@@ -86,7 +86,7 @@ class VolumeSliderFragment : Fragment() {
             }
 
             // bind-only 流程无 onStartCommand，需手动启动轮询
-            if (it.getLocks().isNotEmpty()) {
+            if (it.getLocks().isNotEmpty() || it.hasActiveSchedules()) {
                 it.startLocking()
             }
         }

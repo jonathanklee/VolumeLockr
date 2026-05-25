@@ -5,10 +5,13 @@ import android.media.AudioManager
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
+import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
 
@@ -102,7 +105,7 @@ class VolumeAdapter(
 
     private fun adjustService() {
         mService?.getLocks()?.let {
-            if (it.isNotEmpty()) {
+            if (it.isNotEmpty() || mService?.hasActiveSchedules() == true) {
                 mService?.startLocking()
             } else {
                 mService?.stopLocking()
@@ -131,14 +134,52 @@ class VolumeAdapter(
     }
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
+        // 如果定时调度正在生效，询问是否临时解锁
+        val activeScheduleName = mService?.getActiveScheduleName()
+        if (activeScheduleName != null && mService?.isTemporarilyUnlocked() != true) {
+            showTempUnlockDialog(holder, volume, activeScheduleName)
+            return
+        }
+
         mService?.let {
             it.addLock(volume.stream, volume.value)
-            // startService 确保服务进入 started 状态，Activity 解绑后不销毁 → 后台锁定持续有效
             VolumeService.start(mContext)
             adjustService()
             adjustNotification()
             holder.binding.slider.isEnabled = false
         }
+    }
+
+    /** 弹出临时解锁时长选择对话框 */
+    private fun showTempUnlockDialog(holder: ViewHolder, volume: Volume, scheduleName: String) {
+        val durations = listOf(15, 30, 60, 120) // 分钟
+        val labels = listOf(
+            mContext.getString(R.string.schedule_unlock_15min),
+            mContext.getString(R.string.schedule_unlock_30min),
+            mContext.getString(R.string.schedule_unlock_1hour),
+            mContext.getString(R.string.schedule_unlock_2hour)
+        )
+        MaterialAlertDialogBuilder(mContext)
+            .setTitle(mContext.getString(R.string.schedule_temp_unlock_title))
+            .setMessage(mContext.getString(R.string.schedule_lock_active_msg, scheduleName))
+            .setItems(labels.toTypedArray()) { _, which ->
+                mService?.setTemporaryUnlock(durations[which])
+                Toast.makeText(
+                    mContext,
+                    mContext.getString(R.string.schedule_unlocked_for, durations[which]),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // 解锁后正常执行锁定操作
+                mService?.let {
+                    it.addLock(volume.stream, volume.value)
+                    VolumeService.start(mContext)
+                    adjustService()
+                    adjustNotification()
+                    holder.binding.slider.isEnabled = false
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {

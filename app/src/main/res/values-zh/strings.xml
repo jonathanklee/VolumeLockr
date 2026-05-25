@@ -36,4 +36,42 @@
     <string name="hide_recents_disabled">应用已显示在最近任务中</string>
 
     <string name="aboutLibraries_description_text">音量锁定器</string>
+
+    <!-- 定时调度 -->
+    <string name="schedule_title">定时锁定</string>
+    <string name="schedule_master_enable">启用定时音量锁定</string>
+    <string name="schedule_add">添加时间段</string>
+    <string name="schedule_add_slot">新增时间段</string>
+    <string name="schedule_edit_slot">编辑时间段</string>
+    <string name="schedule_slot_enabled">启用</string>
+    <string name="schedule_slot_name">名称</string>
+    <string name="schedule_day_type">应用周期</string>
+    <string name="schedule_everyday">每天</string>
+    <string name="schedule_workday">工作日</string>
+    <string name="schedule_weekend">周末</string>
+    <string name="schedule_start_time">开始</string>
+    <string name="schedule_end_time">结束</string>
+    <string name="schedule_volume_header">目标音量</string>
+    <string name="schedule_volume_required">请至少设置一个目标音量</string>
+    <string name="schedule_name_required">名称不能为空</string>
+    <string name="schedule_empty_hint">暂无定时规则。\n点击 + 添加新的时间段。</string>
+    <string name="schedule_active_now">● 当前生效</string>
+    <string name="schedule_unnamed">未命名</string>
+    <string name="schedule_temp_unlock_active">临时解锁中</string>
+    <string name="schedule_temp_unlock_remaining">剩余 %d 分钟</string>
+    <string name="schedule_cancel_unlock">恢复锁定</string>
+    <string name="schedule_temp_unlock_title">临时解锁</string>
+    <string name="menu_import">导入</string>
+    <string name="menu_export">导出</string>
+    <string name="schedule_export_success">配置导出成功</string>
+    <string name="schedule_export_failed">导出失败</string>
+    <string name="schedule_import_success">配置导入成功</string>
+    <string name="schedule_import_failed">导入失败</string>
+    <string name="delete">删除</string>
+    <string name="schedule_lock_active_msg">当前 " %s " 正在生效。是否临时解锁以调整音量？</string>
+    <string name="schedule_unlock_15min">15 分钟</string>
+    <string name="schedule_unlock_30min">30 分钟</string>
+    <string name="schedule_unlock_1hour">1 小时</string>
+    <string name="schedule_unlock_2hour">2 小时</string>
+    <string name="schedule_unlocked_for">已临时解锁 %d 分钟</string>
 </resources>

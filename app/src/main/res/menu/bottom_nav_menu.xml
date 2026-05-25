@@ -6,6 +6,11 @@
         android:title="@string/home" />
 
     <item
+        android:id="@+id/scheduleFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/schedule_title" />
+
+    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/options" />

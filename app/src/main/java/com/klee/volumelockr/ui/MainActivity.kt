@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.bottomNavigation!!
 
         val appBarConfiguration = AppBarConfiguration
-            .Builder(R.id.volumeSliderFragment, R.id.settingsFragment, R.id.about_libraries)
+            .Builder(R.id.volumeSliderFragment, R.id.scheduleFragment, R.id.settingsFragment, R.id.about_libraries)
             .build()
 
         navView.setupWithNavController(navController)

@@ -24,6 +24,7 @@ import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
+import com.klee.volumelockr.schedule.ScheduleManager
 import com.klee.volumelockr.ui.MainActivity
 import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER_PREFERENCE
 import com.klee.volumelockr.ui.Volume
@@ -99,11 +100,18 @@ class VolumeService : Service() {
     /** 轮询计数器，用于限制 logcat 输出频率 */
     private var mCheckCount = 0
 
+    /** 追踪临时解锁状态变化，用于检测解锁过期 */
+    private var mWasTempUnlocked = false
+
+    /** 定时调度管理器 */
+    private lateinit var mScheduleManager: ScheduleManager
+
     override fun onCreate() {
         super.onCreate()
 
         mAudioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         mVolumeProvider = VolumeProvider(this)
+        mScheduleManager = ScheduleManager.getInstance(this)
 
         loadPreferences()
         Log.i(TAG, "onCreate: 服务创建完成, locks=${mVolumeLock.size}, SDK=${Build.VERSION.SDK_INT}")
@@ -115,11 +123,16 @@ class VolumeService : Service() {
         }
 
         if (mVolumeLock.isEmpty()) {
-            Log.i(TAG, "onCreate: 无锁定项 → 停止服务")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                stopForeground(Service.STOP_FOREGROUND_REMOVE)
+            val scheduleConfig = mScheduleManager.loadConfig()
+            if (scheduleConfig.scheduleEnabled && scheduleConfig.slots.isNotEmpty()) {
+                Log.i(TAG, "onCreate: 无手动锁但定时调度已启用 → 保持服务运行")
+            } else {
+                Log.i(TAG, "onCreate: 无锁定项且无定时调度 → 停止服务")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    stopForeground(Service.STOP_FOREGROUND_REMOVE)
+                }
+                stopSelf()
             }
-            stopSelf()
         }
         // 不在 onCreate 中启动轮询：
         // - 开机场景：onStartCommand 会在音频 HAL 就绪后延迟启动
@@ -135,12 +148,18 @@ class VolumeService : Service() {
         val fromBoot = intent?.getBooleanExtra(EXTRA_FROM_BOOT, false) == true
         Log.i(TAG, "onStartCommand: fromBoot=$fromBoot, locks=${mVolumeLock.size}, foregroundFailed=$mForegroundFailed")
 
-        // 有锁定项时启动轮询，确保 onStartCommand 触发后锁定立即生效
-        if (mVolumeLock.isNotEmpty()) {
+        // 有锁定项或定时调度启用时启动轮询，确保 onStartCommand 触发后锁定立即生效
+        val hasManualLocks = mVolumeLock.isNotEmpty()
+        val scheduleConfig = mScheduleManager.loadConfig()
+        val hasSchedules = scheduleConfig.scheduleEnabled && scheduleConfig.slots.isNotEmpty()
+        Log.i(TAG, "onStartCommand: hasManualLocks=$hasManualLocks, hasSchedules=$hasSchedules")
+
+        if (hasManualLocks || hasSchedules) {
             val initialDelay = if (fromBoot) BOOT_DELAY_MS else 0L
-            // 开机场景：延迟 15s 启动，避开音频 HAL 初始化竞争
-            // 正常场景：立即启动（包括用户从前台调用 VolumeService.start()）
             startLocking(initialDelay)
+            if (!hasManualLocks && hasSchedules) {
+                Log.i(TAG, "onStartCommand: 仅定时调度生效, 启动轮询")
+            }
         }
 
         val result = if (mForegroundFailed) START_NOT_STICKY else START_STICKY
@@ -236,8 +255,27 @@ class VolumeService : Service() {
     @Synchronized
     private fun checkVolumes() {
         mCheckCount++
-        val shouldLog = mCheckCount <= 5 || mCheckCount % 100 == 0  // 前5次 + 每100次输出一次
+        val shouldLog = mCheckCount <= 5 || mCheckCount % 100 == 0
+
         try {
+            // 1. 检查定时调度是否生效（优先级高于手动锁定）
+            // 使用 loadConfig() 的 1 秒缓存，避免每次 checkVolumes 重复 JSON 反序列化
+            val config = mScheduleManager.loadConfig()
+            val activeSchedule = mScheduleManager.getActiveSlotFromConfig(config)
+            val isTempUnlocked = config.temporaryUnlockUntil > System.currentTimeMillis()
+
+            // 检测临时解锁刚刚过期
+            if (mWasTempUnlocked && !isTempUnlocked && activeSchedule != null) {
+                Log.i(TAG, "checkVolumes: 临时解锁已过期，恢复定时调度 [${activeSchedule.name}]")
+            }
+            mWasTempUnlocked = isTempUnlocked
+
+            if (activeSchedule != null && !isTempUnlocked) {
+                applyScheduleVolumes(activeSchedule, shouldLog)
+                return
+            }
+
+            // 2. 没有活动调度或已临时解锁 → 回退到手动锁定
             var corrections = 0
             for ((stream, volume) in mVolumeLock) {
                 val current = mAudioManager.getStreamVolume(stream)
@@ -252,9 +290,57 @@ class VolumeService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "checkVolumes #$mCheckCount 异常: ${e.javaClass.simpleName} - ${e.message}")
-            // 捕获所有异常，防止 ScheduledExecutorService 静默中断后续调度
-            // 在 MIUI 等设备上后台访问 AudioManager 可能抛 SecurityException
         }
+    }
+
+    /** 应用定时调度目标音量 */
+    private fun applyScheduleVolumes(slot: com.klee.volumelockr.schedule.TimeSlot, shouldLog: Boolean) {
+        var corrections = 0
+        for ((stream, targetVolume) in slot.volumes) {
+            if (targetVolume < 0) continue // 未设置该流的跳过
+            val maxVolume = mAudioManager.getStreamMaxVolume(stream)
+            val clampedTarget = targetVolume.coerceIn(0, maxVolume)
+            val current = mAudioManager.getStreamVolume(stream)
+            if (current != clampedTarget) {
+                mAudioManager.setStreamVolume(stream, clampedTarget, 0)
+                corrections++
+            }
+        }
+        if (shouldLog) {
+            Log.d(TAG, "checkVolumes #$mCheckCount: schedule=${slot.name}, corrections=$corrections, streams=${slot.volumes.size}")
+        }
+        if (corrections > 0) {
+            invokeVolumeListenerCallback()
+        }
+    }
+
+    /** 临时解锁定时调度（指定的分钟数） */
+    fun setTemporaryUnlock(minutes: Int) {
+        mScheduleManager.setTemporaryUnlock(minutes * 60_000L)
+        Log.i(TAG, "setTemporaryUnlock: ${minutes}分钟临时解锁")
+    }
+
+    /** 取消临时解锁 */
+    fun cancelTemporaryUnlock() {
+        mScheduleManager.cancelTemporaryUnlock()
+        Log.i(TAG, "cancelTemporaryUnlock: 恢复定时锁定")
+    }
+
+    fun isTemporarilyUnlocked(): Boolean = mScheduleManager.isTemporarilyUnlocked()
+
+    fun getActiveScheduleName(): String? = mScheduleManager.getActiveSlot()?.name
+
+    /** 是否有启用的定时调度 */
+    fun hasActiveSchedules(): Boolean {
+        val config = mScheduleManager.loadConfig()
+        return config.scheduleEnabled && config.slots.isNotEmpty()
+    }
+
+    /** 是否存在需要保持服务运行的配置（手动锁定 或 定时调度） */
+    private fun hasActiveConfiguration(): Boolean {
+        if (mVolumeLock.isNotEmpty()) return true
+        val config = mScheduleManager.loadConfig()
+        return config.scheduleEnabled && config.slots.isNotEmpty()
     }
 
     private val mVolumeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -352,7 +438,7 @@ class VolumeService : Service() {
     @RequiresApi(Build.VERSION_CODES.N)
     @Synchronized
     fun tryHideNotification() {
-        if (mVolumeLock.isNotEmpty()) {
+        if (hasActiveConfiguration()) {
             return
         }
 

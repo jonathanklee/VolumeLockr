@@ -145,6 +145,9 @@ VolumeLockr allows you to control your Android device volume levels and set pers
 ## Features
 
 - Lock individual audio streams: **Media**, **Alarm**, **Ring / Notification**, **Call**
+- **Scheduled volume lock** — auto-lock volumes by time slot with multi-slot, weekday/weekend, and per-stream targets
+- **JSON import/export** — backup and restore schedule configurations
+- **Temporary unlock** — manually override schedule for 15/30/60/120 minutes
 - **Do Not Disturb** integration — detect ringer mode changes (Silent, Vibrate, Normal)
 - **Lower-only mode** — prevent accidental volume increases
 - **Password protection** — require a password to change locks or disable protection (AES-256 encrypted)

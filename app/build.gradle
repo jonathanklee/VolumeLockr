@@ -10,23 +10,19 @@ android {
 
     defaultConfig {
         applicationId "com.klee.volumelockr"
-        minSdkVersion 21
-        targetSdkVersion 36
-        versionCode 16
-        versionName "1.7.1"
+        minSdk 21
+        targetSdk 36
+        versionCode 17
+        versionName "2.0.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // Release signing: read credentials from local.properties or environment variables.
-    // DO NOT commit keystore files or passwords to the repository.
-    // See README.md → "Build from Source" → "Signing the release APK" for setup instructions.
     def keystorePropertiesFile = rootProject.file('release/keystore.properties')
 
     signingConfigs {
         release {
-            // Dummy values; replaced at build time if keystore.properties exists.
             storeFile file('dummy.keystore')
             storePassword 'dummy'
             keyAlias 'dummy'
@@ -41,7 +37,6 @@ android {
         }
     }
 
-    // Override signing config only if BOTH keystore.properties AND the keystore file exist
     if (keystorePropertiesFile.exists()) {
         def keystoreProperties = new Properties()
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -55,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     buildFeatures {

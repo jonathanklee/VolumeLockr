@@ -38,7 +38,7 @@ subprojects {
                 "src/main/java"
         )
 
-        toolVersion = "1.23.1"
+        toolVersion = "1.23.8"
         config.setFrom("detekt.yml")
         baseline = file("detekt-baseline.xml")
         parallel = false

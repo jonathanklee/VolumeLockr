@@ -43,10 +43,10 @@ body:
     attributes:
       label: App version
       options:
+        - 2.0.0 (GitHub Release)
+        - 1.7.1-zh (GitHub Release)
         - 1.7.1 (F-Droid)
         - 1.7.0
-        - 1.6.4
-        - 1.6.0
         - Other (specify below)
     validations:
       required: true
