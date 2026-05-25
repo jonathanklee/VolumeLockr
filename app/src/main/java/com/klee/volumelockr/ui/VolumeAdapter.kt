@@ -28,6 +28,9 @@ class VolumeAdapter(
     /** 缓存密码保护状态，避免每次 bind 都读取 SharedPreferences */
     private var mPasswordProtected: Boolean? = null
 
+    /** 防止临时解锁对话框重复弹出 */
+    private var mTempUnlockDialogShowing: Boolean = false
+
     fun invalidatePasswordProtected() {
         mPasswordProtected = null
     }
@@ -87,6 +90,7 @@ class VolumeAdapter(
     }
 
     private fun registerSwitchButtonCallback(holder: ViewHolder, volume: Volume) {
+        holder.binding.switchButton.setOnCheckedChangeListener(null)
         holder.binding.switchButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 onVolumeLocked(holder, volume)
@@ -98,8 +102,12 @@ class VolumeAdapter(
 
     private fun loadLockFromService(holder: ViewHolder, volume: Volume) {
         if (mService?.getLocks()?.containsKey(volume.stream) == true) {
+            // 临时移除监听器，避免设置 isChecked 时触发 onVolumeLocked
+            holder.binding.switchButton.setOnCheckedChangeListener(null)
             holder.binding.switchButton.isChecked = true
             holder.binding.slider.isEnabled = false
+            // 恢复监听器
+            registerSwitchButtonCallback(holder, volume)
         }
     }
 
@@ -137,7 +145,9 @@ class VolumeAdapter(
         // 如果定时调度正在生效，询问是否临时解锁
         val activeScheduleName = mService?.getActiveScheduleName()
         if (activeScheduleName != null && mService?.isTemporarilyUnlocked() != true) {
-            showTempUnlockDialog(holder, volume, activeScheduleName)
+            if (!mTempUnlockDialogShowing) {
+                showTempUnlockDialog(holder, volume, activeScheduleName)
+            }
             return
         }
 
@@ -152,6 +162,7 @@ class VolumeAdapter(
 
     /** 弹出临时解锁时长选择对话框 */
     private fun showTempUnlockDialog(holder: ViewHolder, volume: Volume, scheduleName: String) {
+        mTempUnlockDialogShowing = true
         val durations = listOf(15, 30, 60, 120) // 分钟
         val labels = listOf(
             mContext.getString(R.string.schedule_unlock_15min),
@@ -159,9 +170,10 @@ class VolumeAdapter(
             mContext.getString(R.string.schedule_unlock_1hour),
             mContext.getString(R.string.schedule_unlock_2hour)
         )
+        val title = mContext.getString(R.string.schedule_temp_unlock_title)
+        val subtitle = mContext.getString(R.string.schedule_lock_active_msg, scheduleName)
         MaterialAlertDialogBuilder(mContext)
-            .setTitle(mContext.getString(R.string.schedule_temp_unlock_title))
-            .setMessage(mContext.getString(R.string.schedule_lock_active_msg, scheduleName))
+            .setTitle("$title\n$subtitle")
             .setItems(labels.toTypedArray()) { _, which ->
                 mService?.setTemporaryUnlock(durations[which])
                 Toast.makeText(
@@ -177,8 +189,14 @@ class VolumeAdapter(
                     adjustNotification()
                     holder.binding.slider.isEnabled = false
                 }
+                mTempUnlockDialogShowing = false
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setOnCancelListener { mTempUnlockDialogShowing = false }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                mTempUnlockDialogShowing = false
+                // 取消时恢复开关状态，避免开关处于开启但无锁定的矛盾状态
+                holder.binding.switchButton.isChecked = false
+            }
             .show()
     }
 
