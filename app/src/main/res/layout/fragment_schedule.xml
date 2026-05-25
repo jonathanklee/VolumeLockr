@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 总开关 + 导入/导出 工具栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/scheduleMasterSwitch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/schedule_master_enable"
+            android:textSize="13sp" />
+
+        <ImageButton
+            android:id="@+id/btnImport"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/menu_import"
+            android:src="@drawable/ic_settings" />
+
+        <ImageButton
+            android:id="@+id/btnExport"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/menu_export"
+            android:src="@drawable/ic_info" />
+    </LinearLayout>
+
+    <!-- 临时解锁状态栏 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTemporaryUnlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorSecondaryContainer"
+        app:cardElevation="2dp"
+        app:contentPadding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvTempUnlockText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/schedule_temp_unlock_active"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnCancelTempUnlock"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:text="@string/schedule_cancel_unlock"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 时间段列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <!-- 空状态提示 -->
+    <TextView
+        android:id="@+id/tvEmptyHint"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/schedule_empty_hint"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <!-- 添加按钮 -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/schedule_add"
+        app:icon="@android:drawable/ic_input_add" />
+
+</LinearLayout>

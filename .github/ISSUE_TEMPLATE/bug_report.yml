@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear, concise description of what happened.
+      placeholder: "E.g., The media volume lock stops working after 10 minutes in background."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+      placeholder: "1. Open app\n2. Set media volume lock to 50%\n3. Switch to another app\n4. Wait 10 minutes\n5. Press volume button"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: "Volume should remain locked at 50%"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: app_version
+    attributes:
+      label: App version
+      options:
+        - 2.0.0 (GitHub Release)
+        - 1.7.1-zh (GitHub Release)
+        - 1.7.1 (F-Droid)
+        - 1.7.0
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: Device model (e.g., Pixel 7, Xiaomi Redmi Note 12)
+      placeholder: "Xiaomi Redmi Note 12"
+
+  - type: input
+    id: android_version
+    attributes:
+      label: Android version
+      description: Settings → About phone → Android version
+      placeholder: "Android 14"
+
+  - type: input
+    id: rom
+    attributes:
+      label: ROM / OS version
+      description: Especially important for Xiaomi, Samsung, Huawei, etc.
+      placeholder: "MIUI 14 / HyperOS 1.0"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (optional)
+      description: |
+        Run `adb logcat -s VolumeService:V -d > log.txt` and attach the file here.
+      render: shell

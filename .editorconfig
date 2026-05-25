@@ -1,0 +1,23 @@
+# EditorConfig for VolumeLockr
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{xml,properties,toml}]
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{kt,kts}]
+ij_kotlin_imports_layout = java,android,com,*,kotlin

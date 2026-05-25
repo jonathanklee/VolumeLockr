@@ -1,6 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.8.0'
     repositories {
         google()
         mavenCentral()
@@ -39,7 +38,7 @@ subprojects {
                 "src/main/java"
         )
 
-        toolVersion = "1.23.1"
+        toolVersion = "1.23.8"
         config.setFrom("detekt.yml")
         baseline = file("detekt-baseline.xml")
         parallel = false

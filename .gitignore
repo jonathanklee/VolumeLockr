@@ -1,5 +1,69 @@
-.idea
-.gradle
-local.properties
+# Gradle
+.gradle/
 build/
+*/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Android
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ProGuard
+proguard/
+
+# Keystore & signing secrets
+*.keystore
+*.jks
+*.p12
+*.pem
+release/keystore.properties
+release/
+
+# Secrets & Env
+secrets/
+*.env
+*.env.local
+*.env.*.local
+
+# Logs
+*.log
+
+# Kotlin
 .kotlin/
+
+# Testing
+/reports/
+/test-results/
+
+# Misc
+apktool.jar
+*.orig
+*.bak
+release-signing.properties

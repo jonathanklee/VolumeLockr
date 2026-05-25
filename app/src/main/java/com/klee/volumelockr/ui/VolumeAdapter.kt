@@ -5,10 +5,13 @@ import android.media.AudioManager
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
+import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
 
@@ -22,15 +25,28 @@ class VolumeAdapter(
     private var mAudioManager: AudioManager =
         mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-    @MainThread
-    fun update(volumes: List<Volume>) {
-        mVolumeList = volumes
-        update()
+    /** 缓存密码保护状态，避免每次 bind 都读取 SharedPreferences */
+    private var mPasswordProtected: Boolean? = null
+
+    /** 防止临时解锁对话框重复弹出 */
+    private var mTempUnlockDialogShowing: Boolean = false
+
+    fun invalidatePasswordProtected() {
+        mPasswordProtected = null
     }
 
     @MainThread
-    fun update() {
-        notifyDataSetChanged()
+    fun update(volumes: List<Volume>) {
+        // 找出实际变化的项，避免整体刷新
+        val changedPositions = mutableListOf<Int>()
+        for (i in volumes.indices) {
+            if (i >= mVolumeList.size || volumes[i].value != mVolumeList[i].value
+                || volumes[i].locked != mVolumeList[i].locked) {
+                changedPositions.add(i)
+            }
+        }
+        mVolumeList = volumes
+        changedPositions.forEach { notifyItemChanged(it) }
     }
 
     inner class ViewHolder(val binding: VolumeCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -74,6 +90,7 @@ class VolumeAdapter(
     }
 
     private fun registerSwitchButtonCallback(holder: ViewHolder, volume: Volume) {
+        holder.binding.switchButton.setOnCheckedChangeListener(null)
         holder.binding.switchButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 onVolumeLocked(holder, volume)
@@ -84,20 +101,19 @@ class VolumeAdapter(
     }
 
     private fun loadLockFromService(holder: ViewHolder, volume: Volume) {
-        val locks = mService?.getLocks()?.keys
-        locks?.let {
-            for (key in it) {
-                if (volume.stream == key) {
-                    holder.binding.switchButton.isChecked = true
-                    holder.binding.slider.isEnabled = false
-                }
-            }
+        if (mService?.getLocks()?.containsKey(volume.stream) == true) {
+            // 临时移除监听器，避免设置 isChecked 时触发 onVolumeLocked
+            holder.binding.switchButton.setOnCheckedChangeListener(null)
+            holder.binding.switchButton.isChecked = true
+            holder.binding.slider.isEnabled = false
+            // 恢复监听器
+            registerSwitchButtonCallback(holder, volume)
         }
     }
 
     private fun adjustService() {
         mService?.getLocks()?.let {
-            if (it.isNotEmpty()) {
+            if (it.isNotEmpty() || mService?.hasActiveSchedules() == true) {
                 mService?.startLocking()
             } else {
                 mService?.stopLocking()
@@ -126,6 +142,15 @@ class VolumeAdapter(
     }
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
+        // 如果定时调度正在生效，询问是否临时解锁
+        val activeScheduleName = mService?.getActiveScheduleName()
+        if (activeScheduleName != null && mService?.isTemporarilyUnlocked() != true) {
+            if (!mTempUnlockDialogShowing) {
+                showTempUnlockDialog(holder, volume, activeScheduleName)
+            }
+            return
+        }
+
         mService?.let {
             it.addLock(volume.stream, volume.value)
             VolumeService.start(mContext)
@@ -133,6 +158,46 @@ class VolumeAdapter(
             adjustNotification()
             holder.binding.slider.isEnabled = false
         }
+    }
+
+    /** 弹出临时解锁时长选择对话框 */
+    private fun showTempUnlockDialog(holder: ViewHolder, volume: Volume, scheduleName: String) {
+        mTempUnlockDialogShowing = true
+        val durations = listOf(15, 30, 60, 120) // 分钟
+        val labels = listOf(
+            mContext.getString(R.string.schedule_unlock_15min),
+            mContext.getString(R.string.schedule_unlock_30min),
+            mContext.getString(R.string.schedule_unlock_1hour),
+            mContext.getString(R.string.schedule_unlock_2hour)
+        )
+        val title = mContext.getString(R.string.schedule_temp_unlock_title)
+        val subtitle = mContext.getString(R.string.schedule_lock_active_msg, scheduleName)
+        MaterialAlertDialogBuilder(mContext)
+            .setTitle("$title\n$subtitle")
+            .setItems(labels.toTypedArray()) { _, which ->
+                mService?.setTemporaryUnlock(durations[which])
+                Toast.makeText(
+                    mContext,
+                    mContext.getString(R.string.schedule_unlocked_for, durations[which]),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // 解锁后正常执行锁定操作
+                mService?.let {
+                    it.addLock(volume.stream, volume.value)
+                    VolumeService.start(mContext)
+                    adjustService()
+                    adjustNotification()
+                    holder.binding.slider.isEnabled = false
+                }
+                mTempUnlockDialogShowing = false
+            }
+            .setOnCancelListener { mTempUnlockDialogShowing = false }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                mTempUnlockDialogShowing = false
+                // 取消时恢复开关状态，避免开关处于开启但无锁定的矛盾状态
+                holder.binding.switchButton.isChecked = false
+            }
+            .show()
     }
 
     private fun onVolumeUnlocked(holder: ViewHolder, volume: Volume) {
@@ -145,8 +210,10 @@ class VolumeAdapter(
     }
 
     private fun isPasswordProtected(): Boolean {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
-        return sharedPreferences.getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
+        mPasswordProtected = mPasswordProtected
+            ?: PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
+        return mPasswordProtected!!
     }
 
     override fun getItemCount(): Int {

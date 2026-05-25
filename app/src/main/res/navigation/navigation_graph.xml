@@ -27,4 +27,9 @@
       android:name="com.klee.volumelockr.ui.SettingsFragment"
       android:label="@string/options" />
 
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.klee.volumelockr.ui.ScheduleFragment"
+        android:label="@string/schedule_title" />
+
 </navigation>

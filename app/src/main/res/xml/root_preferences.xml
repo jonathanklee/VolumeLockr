@@ -9,6 +9,16 @@
 
   </PreferenceCategory>
 
+  <PreferenceCategory app:title="@string/hide_recents_header">
+
+    <SwitchPreferenceCompat
+        app:key="hide_recents_enabled"
+        app:title="@string/hide_recents_title"
+        app:summary="@string/hide_recents_summary"
+        app:defaultValue="false" />
+
+  </PreferenceCategory>
+
   <PreferenceCategory app:title="@string/password_header">
 
     <SwitchPreferenceCompat

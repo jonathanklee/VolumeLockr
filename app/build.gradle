@@ -7,17 +7,27 @@ plugins {
 
 android {
     compileSdk 36
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.klee.volumelockr"
-        minSdkVersion 21
-        targetSdkVersion 36
-        versionCode 16
-        versionName "1.7.1"
+        minSdk 21
+        targetSdk 36
+        versionCode 18
+        versionName "2.1.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    def keystorePropertiesFile = rootProject.file('release/keystore.properties')
+
+    signingConfigs {
+        release {
+            storeFile file('dummy.keystore')
+            storePassword 'dummy'
+            keyAlias 'dummy'
+            keyPassword 'dummy'
+        }
     }
 
     buildTypes {
@@ -26,12 +36,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    if (keystorePropertiesFile.exists()) {
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        def keystoreFile = rootProject.file(keystoreProperties['storeFile'])
+        if (keystoreFile.exists()) {
+            signingConfigs.release.storeFile = keystoreFile
+            signingConfigs.release.storePassword = keystoreProperties['storePassword']
+            signingConfigs.release.keyAlias = keystoreProperties['keyAlias']
+            signingConfigs.release.keyPassword = keystoreProperties['keyPassword']
+            buildTypes.release.signingConfig = signingConfigs.release
+        }
+    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     buildFeatures {

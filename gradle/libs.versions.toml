@@ -16,7 +16,7 @@ legacySupportV4 = "1.0.0"
 material = "1.13.0"
 navigationFragmentKtx = "2.9.5"
 preferenceKtx = "1.2.1"
-securityCrypto = "1.1.0-alpha06"
+securityCrypto = "1.1.0"
 
 [libraries]
 aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "aboutlibraries" }

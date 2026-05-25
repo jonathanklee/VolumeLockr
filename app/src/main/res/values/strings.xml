@@ -23,5 +23,50 @@
     <string name="limiting_header">Volume Limits</string>
     <string name="allow_lower">Allow lowering volume</string>
 
+    <string name="hide_recents_header">Recent Tasks</string>
+    <string name="hide_recents_title">Hide from recent tasks</string>
+    <string name="hide_recents_summary">Remove app preview and icon from the recent apps list</string>
+
+    <string name="hide_recents_enabled">App hidden from recent tasks</string>
+    <string name="hide_recents_disabled">App visible in recent tasks</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+    <!-- 定时调度 -->
+    <string name="schedule_title">Schedule</string>
+    <string name="schedule_master_enable">Enable time-based volume lock</string>
+    <string name="schedule_add">Add schedule</string>
+    <string name="schedule_add_slot">New schedule</string>
+    <string name="schedule_edit_slot">Edit schedule</string>
+    <string name="schedule_slot_enabled">Enabled</string>
+    <string name="schedule_slot_name">Name</string>
+    <string name="schedule_day_type">Apply on</string>
+    <string name="schedule_everyday">Every day</string>
+    <string name="schedule_workday">Workdays</string>
+    <string name="schedule_weekend">Weekends</string>
+    <string name="schedule_start_time">Start</string>
+    <string name="schedule_end_time">End</string>
+    <string name="schedule_volume_header">Volume targets</string>
+    <string name="schedule_volume_required">Set at least one volume target</string>
+    <string name="schedule_name_required">Name is required</string>
+    <string name="schedule_empty_hint">No schedules configured.\nTap + to add one.</string>
+    <string name="schedule_active_now">● Active now</string>
+    <string name="schedule_unnamed">Unnamed</string>
+    <string name="schedule_temp_unlock_active">Temporarily unlocked</string>
+    <string name="schedule_temp_unlock_remaining">%d min remaining</string>
+    <string name="schedule_cancel_unlock">Restore lock</string>
+    <string name="schedule_temp_unlock_title">Temporary unlock</string>
+    <string name="menu_import">Import</string>
+    <string name="menu_export">Export</string>
+    <string name="schedule_export_success">Schedules exported</string>
+    <string name="schedule_export_failed">Export failed</string>
+    <string name="schedule_import_success">Schedules imported</string>
+    <string name="schedule_import_failed">Import failed</string>
+    <string name="delete">Delete</string>
+    <string name="schedule_lock_active_msg">" %s " is currently active. Temporarily unlock to adjust volume?</string>
+    <string name="schedule_unlock_15min">15 minutes</string>
+    <string name="schedule_unlock_30min">30 minutes</string>
+    <string name="schedule_unlock_1hour">1 hour</string>
+    <string name="schedule_unlock_2hour">2 hours</string>
+    <string name="schedule_unlocked_for">Unlocked for %d minutes</string>
 </resources>
