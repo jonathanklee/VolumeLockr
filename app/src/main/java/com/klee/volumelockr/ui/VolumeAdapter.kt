@@ -107,7 +107,7 @@ class VolumeAdapter(
         holder.binding.slider.clearOnChangeListeners()
         holder.binding.slider.addOnChangeListener(
             Slider.OnChangeListener { _, value, _ ->
-                if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == 2) {
+                if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == AudioManager.RINGER_MODE_NORMAL) {
                     mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
                 }
 
@@ -168,7 +168,7 @@ class VolumeAdapter(
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
         if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
             holder.binding.slider.isEnabled =
-                mService?.getMode() == 2 &&
+                mService?.getMode() == AudioManager.RINGER_MODE_NORMAL &&
                 mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
         }
     }
