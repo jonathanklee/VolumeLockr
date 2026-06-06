@@ -195,10 +195,16 @@ class VolumeService : Service() {
     @Synchronized
     private fun checkVolumes() {
         for ((stream, volume) in mVolumeLock) {
+            if (stream == AudioManager.STREAM_NOTIFICATION && mMode != 2) {
+                continue
+            }
             val current = mAudioManager.getStreamVolume(stream)
             if ((current > volume) || (!mAllowLower && current != volume)) {
-                mAudioManager.setStreamVolume(stream, volume, 0)
-                invokeVolumeListenerCallback()
+                try {
+                    mAudioManager.setStreamVolume(stream, volume, 0)
+                    invokeVolumeListenerCallback()
+                } catch (_: SecurityException) {
+                }
             }
         }
     }

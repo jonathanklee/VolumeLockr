@@ -16,7 +16,8 @@
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTop"
-            android:exported="true">
+            android:exported="true"
+            android:enableOnBackInvokedCallback="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
