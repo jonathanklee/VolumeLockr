@@ -136,7 +136,6 @@ class VolumeSliderFragment : Fragment() {
             mService = null
             mAdapter = null
         }
-
     }
 
     private fun handleServiceConnected() {
@@ -165,5 +164,4 @@ class VolumeSliderFragment : Fragment() {
         mService = null
         mAdapter = null
     }
-
 }

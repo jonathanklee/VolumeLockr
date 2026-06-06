@@ -10,12 +10,12 @@ import androidx.annotation.MainThread
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.R as MaterialR
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.slider.Slider
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
+import com.google.android.material.R as MaterialR
 
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,
@@ -107,7 +107,9 @@ class VolumeAdapter(
         holder.binding.slider.clearOnChangeListeners()
         holder.binding.slider.addOnChangeListener(
             Slider.OnChangeListener { _, value, _ ->
-                if (volume.stream != AudioManager.STREAM_NOTIFICATION || mService?.getMode() == AudioManager.RINGER_MODE_NORMAL) {
+                val canSetVolume = volume.stream != AudioManager.STREAM_NOTIFICATION ||
+                    mService?.getMode() == AudioManager.RINGER_MODE_NORMAL
+                if (canSetVolume) {
                     mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
                 }
 
@@ -204,7 +206,6 @@ class VolumeAdapter(
     override fun getItemCount(): Int {
         return mVolumeList.size
     }
-
 }
 
 data class Volume(
