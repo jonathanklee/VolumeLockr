@@ -3,11 +3,14 @@ package com.klee.volumelockr.ui
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -18,6 +21,7 @@ import com.klee.volumelockr.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -36,13 +40,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.options, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.about -> {
+                navController.navigate(R.id.action_global_to_about)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setupNavigation() {
         setSupportActionBar(binding.toolbar)
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragment_container_view) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.volumeSliderFragment, R.id.settingsFragment, R.id.about_libraries)
+            setOf(R.id.volumeSliderFragment, R.id.settingsFragment)
         )
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
@@ -87,10 +106,10 @@ class MainActivity : AppCompatActivity() {
                     WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
                 )
-                // Rail needs top and bottom padding usually, and left padding
                 v.setPadding(bars.left, bars.top, 0, bars.bottom)
                 WindowInsetsCompat.CONSUMED
             }
         }
     }
+
 }

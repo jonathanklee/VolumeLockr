@@ -1,49 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        card_view:cardCornerRadius="10dp">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/media_text_view"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:text="@string/title"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="14dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="0dp">
+
+                <FrameLayout
+                    android:id="@+id/icon_container"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_icon"
+                    android:backgroundTint="?attr/colorPrimaryContainer">
+
+                    <ImageView
+                        android:id="@+id/stream_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        tools:src="@drawable/ic_media" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/media_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="Media" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/volume_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="7 / 15" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lock_button"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_lock_open"
+                    app:iconTint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/slider"
                 android:stepSize="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:tickVisible="false" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/lock" />
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

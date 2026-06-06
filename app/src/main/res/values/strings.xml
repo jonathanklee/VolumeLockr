@@ -23,5 +23,13 @@
     <string name="limiting_header">Volume Limits</string>
     <string name="allow_lower">Allow lowering volume</string>
 
+    <string name="lock_all">Lock all</string>
+    <string name="unlock_all">Unlock all</string>
+    <string name="locked_subtitle">%1$d of %2$d locked</string>
+
+    <string name="allow_lower_summary">Allow the system to lower the volume below the locked level</string>
+    <string name="password_protected_summary">Require a password to change lock settings</string>
+    <string name="change_password_summary">Set or update the unlock password</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 </resources>

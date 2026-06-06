@@ -5,6 +5,7 @@
     <SwitchPreferenceCompat
         app:key="allow_lower"
         app:title="@string/allow_lower"
+        app:summary="@string/allow_lower_summary"
         app:defaultValue="false" />
 
   </PreferenceCategory>
@@ -13,11 +14,13 @@
 
     <SwitchPreferenceCompat
         app:key="password_protected"
-        app:title="@string/password_protected" />
+        app:title="@string/password_protected"
+        app:summary="@string/password_protected_summary" />
 
     <Preference
         app:key="password"
-        app:title="@string/change_password" />
+        app:title="@string/change_password"
+        app:summary="@string/change_password_summary" />
 
   </PreferenceCategory>
 

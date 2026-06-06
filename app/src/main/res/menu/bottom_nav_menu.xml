@@ -10,8 +10,4 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/options" />
 
-    <item
-        android:id="@+id/about_libraries"
-        android:icon="@drawable/ic_info"
-        android:title="@string/about" />
 </menu>
