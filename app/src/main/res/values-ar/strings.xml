@@ -29,7 +29,7 @@
 
     <string name="allow_lower_summary">السماح للنظام بخفض الصوت أقل من المستوى المقفل</string>
     <string name="password_protected_summary">يتطلب كلمة السر لتغيير إعدادات القفل</string>
-    <string name="change_password_summary">اضبط أو حدّث كلمة المرور الخاصة بإلغاء القفل</string>
+    <string name="change_password_summary">اضبط أو حدّث كلمة السر الخاصة بإلغاء القفل</string>
     
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 </resources>
