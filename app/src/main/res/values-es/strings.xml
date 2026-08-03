@@ -10,7 +10,8 @@
 
     <string name="media_title">Multimedia</string>
     <string name="alarm_title">Alarma</string>
-    <string name="notification_title">Tono / Notificación</string>
+    <string name="ring_title">Tono</string>
+<string name="notification_title">Notificación</string>
     <string name="call_title">Llamada</string>
 
     <string name="password_header">Contraseña</string>

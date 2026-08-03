@@ -10,7 +10,8 @@
 
     <string name="media_title">Medien</string>
     <string name="alarm_title">Alarm</string>
-    <string name="notification_title">Klingelton / Benachrichtigung</string>
+    <string name="ring_title">Klingelton</string>
+<string name="notification_title">Benachrichtigung</string>
     <string name="call_title">Anruf</string>
 
     <string name="password_header">Passwort</string>

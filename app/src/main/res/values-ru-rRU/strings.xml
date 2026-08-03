@@ -10,7 +10,8 @@
 
     <string name="media_title">Медиа</string>
     <string name="alarm_title">Будильник</string>
-    <string name="notification_title">Звонок / Уведомление</string>
+    <string name="ring_title">Звонок</string>
+<string name="notification_title">Уведомление</string>
     <string name="call_title">Вызов</string>
     <!-- Preferences -->
     <string name="password_header">Пароль</string>

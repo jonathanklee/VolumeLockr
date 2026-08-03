@@ -195,7 +195,7 @@ class VolumeService : Service() {
     @Synchronized
     private fun checkVolumes() {
         for ((stream, volume) in mVolumeLock) {
-            if (stream == AudioManager.STREAM_NOTIFICATION && mMode != AudioManager.RINGER_MODE_NORMAL) {
+            if (isRingerAffectedStream(stream) && mMode != AudioManager.RINGER_MODE_NORMAL) {
                 continue
             }
             val current = mAudioManager.getStreamVolume(stream)
@@ -207,6 +207,10 @@ class VolumeService : Service() {
                 }
             }
         }
+    }
+
+    private fun isRingerAffectedStream(stream: Int): Boolean {
+        return stream == AudioManager.STREAM_RING || stream == AudioManager.STREAM_NOTIFICATION
     }
 
     private val mVolumeObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {

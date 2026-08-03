@@ -10,7 +10,8 @@
 
     <string name="media_title">Media</string>
     <string name="alarm_title">Sveglia</string>
-    <string name="notification_title">Suoneria / Notifiche</string>
+    <string name="ring_title">Suoneria</string>
+<string name="notification_title">Notifiche</string>
     <string name="call_title">Chiamate</string>
 
     <string name="password_header">Password</string>

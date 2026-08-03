@@ -31,6 +31,15 @@ class VolumeProvider(private val mContext: Context) {
             ),
 
             Volume(
+                resource.getString(R.string.ring_title),
+                AudioManager.STREAM_RING,
+                fetchVolume(AudioManager.STREAM_RING),
+                0,
+                fetchMaxVolume(AudioManager.STREAM_RING),
+                false
+            ),
+
+            Volume(
                 resource.getString(R.string.notification_title),
                 AudioManager.STREAM_NOTIFICATION,
                 fetchVolume(AudioManager.STREAM_NOTIFICATION),

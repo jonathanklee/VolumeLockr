@@ -29,6 +29,7 @@ class VolumeAdapter(
         private val STREAM_ICONS = mapOf(
             AudioManager.STREAM_MUSIC to R.drawable.ic_media,
             AudioManager.STREAM_VOICE_CALL to R.drawable.ic_call,
+            AudioManager.STREAM_RING to R.drawable.ic_ring,
             AudioManager.STREAM_NOTIFICATION to R.drawable.ic_bell,
             AudioManager.STREAM_ALARM to R.drawable.ic_alarm
         )
@@ -36,6 +37,7 @@ class VolumeAdapter(
         private val STREAM_CONTAINER_COLORS = mapOf(
             AudioManager.STREAM_MUSIC to MaterialR.attr.colorPrimaryContainer,
             AudioManager.STREAM_VOICE_CALL to MaterialR.attr.colorTertiaryContainer,
+            AudioManager.STREAM_RING to MaterialR.attr.colorSecondaryFixedDim,
             AudioManager.STREAM_NOTIFICATION to MaterialR.attr.colorSecondaryContainer,
             AudioManager.STREAM_ALARM to MaterialR.attr.colorErrorContainer
         )
@@ -43,8 +45,14 @@ class VolumeAdapter(
         private val STREAM_ON_CONTAINER_COLORS = mapOf(
             AudioManager.STREAM_MUSIC to MaterialR.attr.colorOnPrimaryContainer,
             AudioManager.STREAM_VOICE_CALL to MaterialR.attr.colorOnTertiaryContainer,
+            AudioManager.STREAM_RING to MaterialR.attr.colorOnSecondaryFixedVariant,
             AudioManager.STREAM_NOTIFICATION to MaterialR.attr.colorOnSecondaryContainer,
             AudioManager.STREAM_ALARM to MaterialR.attr.colorOnErrorContainer
+        )
+
+        private val RINGER_AFFECTED_STREAMS = setOf(
+            AudioManager.STREAM_RING,
+            AudioManager.STREAM_NOTIFICATION
         )
     }
 
@@ -107,7 +115,7 @@ class VolumeAdapter(
         holder.binding.slider.clearOnChangeListeners()
         holder.binding.slider.addOnChangeListener(
             Slider.OnChangeListener { _, value, _ ->
-                val canSetVolume = volume.stream != AudioManager.STREAM_NOTIFICATION ||
+                val canSetVolume = !isRingerAffectedStream(volume.stream) ||
                     mService?.getMode() == AudioManager.RINGER_MODE_NORMAL
                 if (canSetVolume) {
                     mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
@@ -168,11 +176,15 @@ class VolumeAdapter(
     }
 
     private fun handleRingerMode(holder: ViewHolder, volume: Volume) {
-        if (volume.stream == AudioManager.STREAM_NOTIFICATION) {
+        if (isRingerAffectedStream(volume.stream)) {
             holder.binding.slider.isEnabled =
                 mService?.getMode() == AudioManager.RINGER_MODE_NORMAL &&
-                mService?.getLocks()?.containsKey(AudioManager.STREAM_NOTIFICATION) == false
+                mService?.getLocks()?.containsKey(volume.stream) == false
         }
+    }
+
+    private fun isRingerAffectedStream(stream: Int): Boolean {
+        return RINGER_AFFECTED_STREAMS.contains(stream)
     }
 
     private fun onVolumeLocked(holder: ViewHolder, volume: Volume) {
