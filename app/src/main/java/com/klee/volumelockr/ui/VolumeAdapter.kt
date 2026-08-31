@@ -133,10 +133,12 @@ class VolumeAdapter(
         holder.binding.slider.clearOnChangeListeners()
         holder.binding.slider.addOnChangeListener(
             Slider.OnChangeListener { _, value, _ ->
-                val canSetVolume = !isRingerAffectedStream(volume.stream) ||
-                    mService?.getMode() == AudioManager.RINGER_MODE_NORMAL
-                if (canSetVolume) {
-                    mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
+                if(!mInPreferencesMode) {
+                    val canSetVolume = !isRingerAffectedStream(volume.stream) ||
+                            mService?.getMode() == AudioManager.RINGER_MODE_NORMAL
+                    if (canSetVolume) {
+                        mAudioManager.setStreamVolume(volume.stream, value.toInt(), 0)
+                    }
                 }
                 volume.value = value.toInt()
                 holder.binding.volumeValue.text = formatVolumeValue(value.toInt(), volume.max)
@@ -254,6 +256,11 @@ class VolumeAdapter(
     private fun getVolumePresetLevel(volume: Volume): Int {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         when (volume.stream) {
+            AudioManager.STREAM_RING -> return  sharedPreferences.getInt(
+                SettingsFragment.RING_PRESET_PREFERENCE,
+                volume.min
+            ).coerceIn(volume.min,volume.max)
+
             AudioManager.STREAM_MUSIC -> return sharedPreferences.getInt(
                 SettingsFragment.MEDIA_VOLUME_PRESET_PREFERENCE,
                 volume.min

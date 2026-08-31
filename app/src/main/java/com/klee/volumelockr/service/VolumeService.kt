@@ -122,6 +122,14 @@ class VolumeService() : Service() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         when (stream) {
+            AudioManager.STREAM_RING -> return sharedPreferences.getInt(
+                SettingsFragment.RING_PRESET_PREFERENCE,
+                VolumeProvider.MIN_MUSIC_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_RING)
+            )
+
             AudioManager.STREAM_MUSIC -> return sharedPreferences.getInt(
                 SettingsFragment.MEDIA_VOLUME_PRESET_PREFERENCE,
                 VolumeProvider.MIN_MUSIC_VOLUME
@@ -222,6 +230,14 @@ class VolumeService() : Service() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         when (stream) {
+            AudioManager.STREAM_RING -> return sharedPreferences.getInt(
+                SettingsFragment.RING_PRESET_PREFERENCE,
+                VolumeProvider.MIN_NOTIFICATION_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_RING)
+            )
+
             AudioManager.STREAM_MUSIC -> return sharedPreferences.getInt(
                 SettingsFragment.MEDIA_VOLUME_PRESET_PREFERENCE,
                 VolumeProvider.MIN_MUSIC_VOLUME

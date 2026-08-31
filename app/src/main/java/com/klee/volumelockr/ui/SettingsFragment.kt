@@ -26,6 +26,7 @@ import java.io.IOException
 import java.security.GeneralSecurityException
 import androidx.core.content.edit
 import androidx.core.os.BundleCompat
+import android.view.ViewGroup
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -43,6 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         const val CHANGE_PRESETS_PREFERENCE = "change_presets"
 
+        const val RING_PRESET_PREFERENCE = "ring_volume_preset"
         const val MEDIA_VOLUME_PRESET_PREFERENCE = "media_volume_preset"
         const val CALL_VOLUME_PRESET_PREFERENCE = "call_volume_preset"
         const val ALARM_VOLUME_PRESET_PREFERENCE = "alarm_volume_preset"
@@ -172,6 +174,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             volumes.forEach {
                 when (it.stream) {
+                    AudioManager.STREAM_RING ->
+                        preferenceManager.sharedPreferences?.edit {
+                            putInt(
+                                RING_PRESET_PREFERENCE,
+                                it.value.coerceIn(it.min, it.max)
+                            )
+                        }
+
                     AudioManager.STREAM_MUSIC ->
                         preferenceManager.sharedPreferences?.edit {
                             putInt(
@@ -319,5 +329,18 @@ class ChangePresetDialog : DialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        dialog?.window?.let { window ->
+            val height = (resources.displayMetrics.heightPixels * 1.0).toInt()
+
+            window.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                height
+            )
+        }
     }
 }
