@@ -22,9 +22,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:text="@string/lock_all"
             app:icon="@drawable/ic_lock"
-            app:iconGravity="textStart" />
+            app:iconGravity="textStart"
+            app:iconPadding="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/unlock_all_chip"
@@ -33,9 +37,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="6dp"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:text="@string/unlock_all"
             app:icon="@drawable/ic_lock_open"
-            app:iconGravity="textStart" />
+            app:iconGravity="textStart"
+            app:iconPadding="4dp" />
 
     </LinearLayout>
 

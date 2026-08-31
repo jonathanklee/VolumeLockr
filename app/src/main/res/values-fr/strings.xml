@@ -2,7 +2,8 @@
     <string name="app_name">VolumeLockr</string>
     <string name="media_title">Contenus multimédias</string>
     <string name="alarm_title">Alarmes</string>
-    <string name="notification_title">Sonneries / Notifications</string>
+    <string name="ring_title">Sonneries</string>
+<string name="notification_title">Notifications</string>
     <string name="call_title">Appels</string>
     <string name="title">Titre</string>
     <string name="lock">Verrouiller</string>
@@ -22,4 +23,12 @@
     <string name="home">Accueil</string>
     <string name="password_too_short">Le mot de passe doit contenir au moins %d caractères</string>
     <string name="password_save_error">Échec de l\'enregistrement du mot de passe</string>
+
+    <string name="lock_all">Tout verrouiller</string>
+    <string name="unlock_all">Tout déverrouiller</string>
+    <string name="locked_subtitle">%1$d de %2$d verrouillé(s)</string>
+    <string name="allow_lower_summary">Autoriser le système à baisser le volume en dessous du niveau verrouillé</string>
+    <string name="password_protected_summary">Demander un mot de passe pour modifier les paramètres de verrouillage</string>
+    <string name="change_password_summary">Définir ou mettre à jour le mot de passe de déverrouillage</string>
+
 </resources>

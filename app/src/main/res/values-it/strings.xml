@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <string name="title">VolumeLockr</string>
+    <string name="lock">Blocca</string>
+    <string name="options">Opzioni</string>
+    <string name="about">Informazioni</string>
+    <string name="home">Home</string>
+    <string name="dialog_policy_access_title">Per rilevare le modifiche alla modalità suoneria (Silenzioso, Vibrazione, Normale), VolumeLockr richiede l\'accesso a "Non disturbare".</string>
+    <string name="dialog_allow">Consenti</string>
+
+    <string name="media_title">Media</string>
+    <string name="alarm_title">Sveglia</string>
+    <string name="ring_title">Suoneria</string>
+<string name="notification_title">Notifiche</string>
+    <string name="call_title">Chiamate</string>
+
+    <string name="password_header">Password</string>
+    <string name="password_protected">Abilita protezione con password</string>
+    <string name="change_password">Cambia password</string>
+    <string name="enter_password">Inserisci la password</string>
+    <string name="password_too_short">La password deve contenere almeno %d caratteri</string>
+    <string name="password_save_error">Impossibile salvare la password</string>
+
+    <string name="limiting_header">Limiti di volume</string>
+    <string name="allow_lower">Consenti di abbassare il volume</string>
+
+    <string name="lock_all">Blocca tutto</string>
+    <string name="unlock_all">Sblocca tutto</string>
+    <string name="locked_subtitle">%1$d di %2$d bloccati</string>
+
+    <string name="allow_lower_summary">Consenti al sistema di abbassare il volume al di sotto del livello bloccato</string>
+    <string name="password_protected_summary">Richiede una password per modificare le impostazioni di blocco</string>
+    <string name="change_password_summary">Imposta o aggiorna la password di sblocco</string>
+
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+</resources>

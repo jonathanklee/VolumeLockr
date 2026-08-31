@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">VolumeLockr</string>
+    <string name="title">VolumeLockr</string>
+    <string name="lock">Sperren</string>
+    <string name="options">Optionen</string>
+    <string name="about">Über</string>
+    <string name="home">Startseite</string>
+    <string name="dialog_policy_access_title">Um Änderungen des Klingeltonmodus (Lautlos, Vibration, Normal) zu erkennen, benötigt VolumeLockr Zugriff auf „Nicht stören".</string>
+    <string name="dialog_allow">Erlauben</string>
+
+    <string name="media_title">Medien</string>
+    <string name="alarm_title">Alarm</string>
+    <string name="ring_title">Klingelton</string>
+<string name="notification_title">Benachrichtigung</string>
+    <string name="call_title">Anruf</string>
+
+    <string name="password_header">Passwort</string>
+    <string name="password_protected">Passwortschutz aktivieren</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="enter_password">Passwort eingeben</string>
+    <string name="password_too_short">Das Passwort muss mindestens %d Zeichen lang sein</string>
+    <string name="password_save_error">Fehler beim Speichern des Passworts</string>
+
+    <string name="limiting_header">Lautstärkegrenzen</string>
+    <string name="allow_lower">Lautstärke verringern erlauben</string>
+
+    <string name="lock_all">Alle sperren</string>
+    <string name="unlock_all">Alle entsperren</string>
+    <string name="locked_subtitle">%1$d von %2$d gesperrt</string>
+
+    <string name="allow_lower_summary">System erlauben, die Lautstärke unter den gesperrten Wert zu senken</string>
+    <string name="password_protected_summary">Passwort zum Ändern der Sperreinstellungen erforderlich</string>
+    <string name="change_password_summary">Entsperrpasswort festlegen oder aktualisieren</string>
+
+    <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+</resources>
