@@ -1,27 +1,46 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <PreferenceCategory app:title="@string/limiting_header">
+    <PreferenceCategory app:title="@string/limiting_header">
 
-    <SwitchPreferenceCompat
-        app:key="allow_lower"
-        app:title="@string/allow_lower"
-        app:summary="@string/allow_lower_summary"
-        app:defaultValue="false" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="allow_lower"
+            app:summary="@string/allow_lower_summary"
+            app:title="@string/allow_lower" />
 
-  </PreferenceCategory>
+    </PreferenceCategory>
 
-  <PreferenceCategory app:title="@string/password_header">
+    <PreferenceCategory app:title="@string/password_header">
 
-    <SwitchPreferenceCompat
-        app:key="password_protected"
-        app:title="@string/password_protected"
-        app:summary="@string/password_protected_summary" />
+        <SwitchPreferenceCompat
+            app:key="password_protected"
+            app:summary="@string/password_protected_summary"
+            app:title="@string/password_protected" />
 
-    <Preference
-        app:key="password"
-        app:title="@string/change_password"
-        app:summary="@string/change_password_summary" />
+        <Preference
+            app:key="password"
+            app:summary="@string/change_password_summary"
+            app:title="@string/change_password" />
 
-  </PreferenceCategory>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/preset_levels_text">
+
+        <SwitchPreferenceCompat
+            app:key="use_presets_locking_all"
+            app:summary="@string/use_presets_all_summary"
+            app:title="@string/use_presets_all" />
+
+        <SwitchPreferenceCompat
+            app:key="use_presets_locking_individual"
+            app:summary="@string/use_presets_individual_summary"
+            app:title="@string/use_presets_individual" />
+
+
+        <Preference
+            app:key="change_presets"
+            app:summary="@string/change_presets_summary"
+            app:title="@string/change_presets" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

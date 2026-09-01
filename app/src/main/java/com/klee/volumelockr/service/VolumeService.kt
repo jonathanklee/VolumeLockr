@@ -24,12 +24,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
 import com.klee.volumelockr.ui.MainActivity
+import com.klee.volumelockr.ui.SettingsFragment
 import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER_PREFERENCE
 import com.klee.volumelockr.ui.Volume
 import java.util.Timer
 import java.util.TimerTask
-
-class VolumeService : Service() {
+class VolumeService() : Service() {
 
     companion object {
         const val NOTIFICATION_TITLE = "VolumeLockr"
@@ -77,12 +77,13 @@ class VolumeService : Service() {
     private var mAllowLower = false
     private var mAllowLowerListener: (() -> Unit)? = null
 
+    private var mVolumePreset: HashMap<Int, Int> = hashMapOf<Int, Int>()
+
     override fun onCreate() {
         super.onCreate()
 
         mAudioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         mVolumeProvider = VolumeProvider(this)
-
         loadPreferences()
 
         registerObservers()
@@ -109,6 +110,62 @@ class VolumeService : Service() {
     }
 
     fun getVolumes(): List<Volume> = mVolumeProvider.getVolumes()
+    fun getVolumesPresets(): List<Volume> {
+        val volumes = mVolumeProvider.getVolumes()
+        volumes.forEach { volume ->
+            volume.value = mVolumePreset[volume.stream] ?: getSavedVolumePreset(volume.stream)
+        }
+        return volumes
+    }
+
+    private fun getSavedVolumePreset(stream: Int): Int {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        when (stream) {
+            AudioManager.STREAM_RING -> return sharedPreferences.getInt(
+                SettingsFragment.RING_PRESET_PREFERENCE,
+                VolumeProvider.MIN_MUSIC_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_RING)
+            )
+
+            AudioManager.STREAM_MUSIC -> return sharedPreferences.getInt(
+                SettingsFragment.MEDIA_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_MUSIC_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_MUSIC_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_MUSIC)
+            )
+
+            AudioManager.STREAM_VOICE_CALL -> return sharedPreferences.getInt(
+                SettingsFragment.CALL_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_CALL_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_CALL_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_VOICE_CALL)
+            )
+
+            AudioManager.STREAM_NOTIFICATION -> return sharedPreferences.getInt(
+                SettingsFragment.NOTIFICATION_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_NOTIFICATION_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME, mVolumeProvider.fetchMaxVolume(
+                    AudioManager.STREAM_NOTIFICATION
+                )
+            )
+
+            AudioManager.STREAM_ALARM -> return sharedPreferences.getInt(
+                SettingsFragment.ALARM_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_ALARM_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_ALARM_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_ALARM)
+            )
+
+            else -> return  1
+        }
+    }
 
     @Synchronized
     fun startLocking() {
@@ -152,9 +209,70 @@ class VolumeService : Service() {
     }
 
     @Synchronized
-    fun addLock(stream: Int, volume: Int) {
-        mVolumeLock[stream] = volume
+    fun addLock(stream: Int, volume: Int, fromLockAll: Boolean) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val usePresetsOnLockAll =
+            sharedPreferences.getBoolean(SettingsFragment.USE_PRESETS_ALL_PREFERENCE, false)
+        val usePresetsOnLockSingle =
+            sharedPreferences.getBoolean(SettingsFragment.USE_PRESETS_INDIVIDUAL_PREFERENCE, false)
+        var presetVolumeLevel: Int
+        if (usePresetsOnLockAll || usePresetsOnLockSingle) {
+            if ((usePresetsOnLockAll && fromLockAll) || (usePresetsOnLockSingle && !fromLockAll)) {
+                presetVolumeLevel = getPresetVolumeForLockedStream(stream)
+            } else presetVolumeLevel = -1
+        } else presetVolumeLevel = -1
+
+        mVolumeLock[stream] = if (presetVolumeLevel >= 0) presetVolumeLevel else volume
         savePreferences()
+    }
+
+    fun getPresetVolumeForLockedStream(stream: Int): Int {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        when (stream) {
+            AudioManager.STREAM_RING -> return sharedPreferences.getInt(
+                SettingsFragment.RING_PRESET_PREFERENCE,
+                VolumeProvider.MIN_NOTIFICATION_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_RING)
+            )
+
+            AudioManager.STREAM_MUSIC -> return sharedPreferences.getInt(
+                SettingsFragment.MEDIA_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_MUSIC_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_MUSIC_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_MUSIC)
+            )
+
+            AudioManager.STREAM_VOICE_CALL -> return sharedPreferences.getInt(
+                SettingsFragment.CALL_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_CALL_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_CALL_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_VOICE_CALL)
+            )
+
+            AudioManager.STREAM_NOTIFICATION -> return sharedPreferences.getInt(
+                SettingsFragment.NOTIFICATION_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_NOTIFICATION_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_NOTIFICATION_VOLUME, mVolumeProvider.fetchMaxVolume(
+                    AudioManager.STREAM_NOTIFICATION
+                )
+            )
+
+            AudioManager.STREAM_ALARM -> return sharedPreferences.getInt(
+                SettingsFragment.ALARM_VOLUME_PRESET_PREFERENCE,
+                VolumeProvider.MIN_ALARM_VOLUME
+            ).coerceIn(
+                VolumeProvider.MIN_ALARM_VOLUME,
+                mVolumeProvider.fetchMaxVolume(AudioManager.STREAM_ALARM)
+            )
+
+            else -> return 1
+        }
     }
 
     @Synchronized
@@ -181,7 +299,9 @@ class VolumeService : Service() {
 
     private fun loadPreferences() {
         val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
+
         class Token : TypeToken<HashMap<Int, Int>>()
+
         val value = sharedPreferences.getString(LOCKS_KEY, "")
         if (value.isNullOrBlank()) {
             return
@@ -333,6 +453,10 @@ class VolumeService : Service() {
 
     private fun isForegroundStartRestriction(error: IllegalStateException): Boolean {
         return error.javaClass.name == "android.app.ForegroundServiceStartNotAllowedException"
+    }
+
+    fun setVolumePreset(stream: Int, volume: Int) {
+        mVolumePreset[stream] = volume
     }
 
     inner class LocalBinder : Binder() {

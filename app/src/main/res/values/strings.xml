@@ -33,4 +33,13 @@
     <string name="change_password_summary">Set or update the unlock password</string>
 
     <string name="aboutLibraries_description_text">VolumeLockr</string>
+
+    <string name="preset_levels_text">Preset levels</string>
+    <string name="use_presets_all">Use presets for all locks</string>
+    <string name="use_presets_all_summary">Set volume to preset levels when locking all volumes</string>
+    <string name="use_presets_individual">Use presets for individual locks</string>
+    <string name="use_presets_individual_summary">Set volume to preset levels when locking individual volumes</string>
+    <string name="change_presets">Change presets</string>
+    <string name="change_presets_summary">Set or update preset volume levels</string>
+
 </resources>
