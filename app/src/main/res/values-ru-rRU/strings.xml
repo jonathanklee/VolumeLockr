@@ -25,6 +25,12 @@
     <string name="allow_lower">Разрешить снижение громкости</string>
     <string name="lock_all">Заблокировать всё</string>
     <string name="unlock_all">Разблокировать всё</string>
+    <string name="locked_subtitle">%1$d из %2$d заблокировано</string>
+
+    <string name="allow_lower_summary">Разрешить системе снижать громкость ниже заблокированного уровня</string>
+    <string name="password_protected_summary">Требовать пароль для изменения настроек блокировки</string>
+    <string name="change_password_summary">Задать или обновить пароль разблокировки</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>
