@@ -3,8 +3,6 @@ package com.klee.volumelockr.ui
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -40,19 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.options, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.about -> {
-                navController.navigate(R.id.action_global_to_about)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    fun navigateToAbout() {
+        navController.navigate(R.id.action_global_to_about)
     }
 
     private fun setupNavigation() {
