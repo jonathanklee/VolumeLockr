@@ -18,6 +18,7 @@ import androidx.preference.PreferenceManager
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
 import com.klee.volumelockr.service.VolumeService
+import com.klee.volumelockr.sound.VolumePreviewPlayer
 
 class VolumeSliderFragment : Fragment() {
 
@@ -26,6 +27,7 @@ class VolumeSliderFragment : Fragment() {
     private var mAdapter: VolumeAdapter? = null
     private var mService: VolumeService? = null
     private var isServiceBound = false
+    private val mPreviewPlayer by lazy { VolumePreviewPlayer(requireContext().applicationContext) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +48,7 @@ class VolumeSliderFragment : Fragment() {
     }
 
     override fun onPause() {
+        mPreviewPlayer.stop()
         unbindServiceIfNeeded()
         clearSubtitle()
         super.onPause()
@@ -61,7 +64,12 @@ class VolumeSliderFragment : Fragment() {
     private fun setupRecyclerView(service: VolumeService) {
         val spanCount = if (resources.getBoolean(R.bool.use_two_columns)) 2 else 1
         binding.recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), spanCount)
-        mAdapter = VolumeAdapter(service.getVolumes(), service, requireContext()).also { adapter ->
+        mAdapter = VolumeAdapter(
+            service.getVolumes(),
+            service,
+            requireContext(),
+            mPreviewPlayer
+        ).also { adapter ->
             adapter.onLockStateChanged = { updateSubtitle() }
         }
         binding.recyclerView.adapter = mAdapter

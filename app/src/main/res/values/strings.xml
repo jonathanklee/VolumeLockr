@@ -24,6 +24,10 @@
     <string name="limiting_header">Volume Limits</string>
     <string name="allow_lower">Allow lowering volume</string>
 
+    <string name="sound_feedback_header">Sound feedback</string>
+    <string name="play_sound_preview">Play a sound preview</string>
+    <string name="play_sound_preview_summary">Play a sample sound at the selected level when a slider is released</string>
+
     <string name="lock_all">Lock all</string>
     <string name="unlock_all">Unlock all</string>
     <string name="locked_subtitle">%1$d of %2$d locked</string>

@@ -28,6 +28,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val PASSWORD_PROTECTED_PREFERENCE = "password_protected"
         const val PASSWORD_CHANGE_PREFERENCE = "password"
         const val ALLOW_LOWER_PREFERENCE = "allow_lower"
+        const val PLAY_SOUND_PREVIEW_PREFERENCE = "play_sound_preview"
         const val DELAY_IN_MS = 100L
         const val MIN_PASSWORD_LENGTH = 6
         private const val ENCRYPTED_PREFS_FILE = "secure_settings"

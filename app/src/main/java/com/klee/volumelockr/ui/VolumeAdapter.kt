@@ -15,12 +15,14 @@ import com.google.android.material.slider.Slider
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.VolumeCardBinding
 import com.klee.volumelockr.service.VolumeService
+import com.klee.volumelockr.sound.VolumePreviewPlayer
 import com.google.android.material.R as MaterialR
 
 class VolumeAdapter(
     private var mVolumeList: List<Volume>,
     private var mService: VolumeService?,
     private var mContext: Context,
+    private val mPreviewPlayer: VolumePreviewPlayer,
     var onLockStateChanged: (() -> Unit)? = null
 ) :
     RecyclerView.Adapter<VolumeAdapter.ViewHolder>() {
@@ -88,6 +90,7 @@ class VolumeAdapter(
         holder.binding.volumeValue.text = formatVolumeValue(holder.binding.slider.value.toInt(), volume.max)
 
         registerSeekBarCallback(holder, volume)
+        registerSoundPreviewCallback(holder, volume)
         registerLockButtonCallback(holder, volume)
 
         loadLockFromService(holder, volume)
@@ -123,6 +126,23 @@ class VolumeAdapter(
 
                 volume.value = value.toInt()
                 holder.binding.volumeValue.text = formatVolumeValue(value.toInt(), volume.max)
+            }
+        )
+    }
+
+    private fun registerSoundPreviewCallback(holder: ViewHolder, volume: Volume) {
+        holder.binding.slider.clearOnSliderTouchListeners()
+        holder.binding.slider.addOnSliderTouchListener(
+            object : Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                    mPreviewPlayer.stop()
+                }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    if (isSoundPreviewEnabled()) {
+                        mPreviewPlayer.play(volume.stream)
+                    }
+                }
             }
         )
     }
@@ -213,6 +233,11 @@ class VolumeAdapter(
     private fun isPasswordProtected(): Boolean {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         return sharedPreferences.getBoolean(SettingsFragment.PASSWORD_PROTECTED_PREFERENCE, false)
+    }
+
+    private fun isSoundPreviewEnabled(): Boolean {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        return sharedPreferences.getBoolean(SettingsFragment.PLAY_SOUND_PREVIEW_PREFERENCE, true)
     }
 
     override fun getItemCount(): Int {

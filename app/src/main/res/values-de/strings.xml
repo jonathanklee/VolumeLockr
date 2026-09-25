@@ -32,6 +32,10 @@
     <string name="password_protected_summary">Passwort zum Ändern der Sperreinstellungen erforderlich</string>
     <string name="change_password_summary">Entsperrpasswort festlegen oder aktualisieren</string>
 
+    <string name="sound_feedback_header">Klangfeedback</string>
+    <string name="play_sound_preview">Klangvorschau abspielen</string>
+    <string name="play_sound_preview_summary">Beim Loslassen des Reglers einen Beispielton in der gewählten Lautstärke abspielen</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

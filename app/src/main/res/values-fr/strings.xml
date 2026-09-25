@@ -31,4 +31,8 @@
     <string name="password_protected_summary">Demander un mot de passe pour modifier les paramètres de verrouillage</string>
     <string name="change_password_summary">Définir ou mettre à jour le mot de passe de déverrouillage</string>
 
+    <string name="sound_feedback_header">Retour sonore</string>
+    <string name="play_sound_preview">Jouer un aperçu sonore</string>
+    <string name="play_sound_preview_summary">Jouer un son d\'exemple au niveau sélectionné lorsque le curseur est relâché</string>
+
 </resources>

@@ -10,6 +10,16 @@
 
   </PreferenceCategory>
 
+  <PreferenceCategory app:title="@string/sound_feedback_header">
+
+    <SwitchPreferenceCompat
+        app:key="play_sound_preview"
+        app:title="@string/play_sound_preview"
+        app:summary="@string/play_sound_preview_summary"
+        app:defaultValue="true" />
+
+  </PreferenceCategory>
+
   <PreferenceCategory app:title="@string/password_header">
 
     <SwitchPreferenceCompat
@@ -23,5 +33,6 @@
         app:summary="@string/change_password_summary" />
 
   </PreferenceCategory>
+
 
 </PreferenceScreen>

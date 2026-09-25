@@ -32,6 +32,10 @@
     <string name="password_protected_summary">Richiede una password per modificare le impostazioni di blocco</string>
     <string name="change_password_summary">Imposta o aggiorna la password di sblocco</string>
 
+    <string name="sound_feedback_header">Feedback sonoro</string>
+    <string name="play_sound_preview">Riproduci un\'anteprima sonora</string>
+    <string name="play_sound_preview_summary">Riproduci un suono di esempio al livello selezionato quando il cursore viene rilasciato</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

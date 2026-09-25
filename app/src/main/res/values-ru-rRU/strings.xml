@@ -31,6 +31,10 @@
     <string name="password_protected_summary">Требовать пароль для изменения настроек блокировки</string>
     <string name="change_password_summary">Задать или обновить пароль разблокировки</string>
 
+    <string name="sound_feedback_header">Звуковая обратная связь</string>
+    <string name="play_sound_preview">Воспроизводить образец звука</string>
+    <string name="play_sound_preview_summary">Воспроизводить образец звука на выбранном уровне при отпускании ползунка</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>
