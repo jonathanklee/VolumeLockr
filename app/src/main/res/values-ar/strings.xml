@@ -35,6 +35,11 @@
     <string name="sound_feedback_header">الاستجابة الصوتية</string>
     <string name="play_sound_preview">تشغيل معاينة صوتية</string>
     <string name="play_sound_preview_summary">تشغيل صوت تجريبي بالمستوى المحدد عند ترك شريط التمرير</string>
+
+    <string name="github_star">ضع نجمة على GitHub</string>
+    <string name="donate">اشترِ لي قهوة</string>
+    <string name="no_browser_error">لا يوجد تطبيق يمكنه فتح هذا الرابط</string>
+    <string name="version">الإصدار</string>
     
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 </resources>

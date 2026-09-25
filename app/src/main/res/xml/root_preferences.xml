@@ -34,5 +34,20 @@
 
   </PreferenceCategory>
 
+  <PreferenceCategory app:title="@string/about">
+
+    <Preference
+        app:key="github_star"
+        app:title="@string/github_star" />
+
+    <Preference
+        app:key="donate"
+        app:title="@string/donate" />
+
+    <Preference
+        app:key="version"
+        app:title="@string/version" />
+
+  </PreferenceCategory>
 
 </PreferenceScreen>

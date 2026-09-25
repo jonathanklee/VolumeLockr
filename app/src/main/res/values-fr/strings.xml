@@ -35,4 +35,9 @@
     <string name="play_sound_preview">Jouer un aperçu sonore</string>
     <string name="play_sound_preview_summary">Jouer un son d\'exemple au niveau sélectionné lorsque le curseur est relâché</string>
 
+    <string name="github_star">Étoiler sur GitHub</string>
+    <string name="donate">Offrir un café</string>
+    <string name="no_browser_error">Aucune application ne peut ouvrir ce lien</string>
+    <string name="version">Version</string>
+
 </resources>

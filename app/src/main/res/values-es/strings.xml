@@ -36,6 +36,11 @@
     <string name="play_sound_preview">Reproducir una muestra de sonido</string>
     <string name="play_sound_preview_summary">Reproducir un sonido de muestra al nivel seleccionado al soltar el deslizador</string>
 
+    <string name="github_star">Dar estrella en GitHub</string>
+    <string name="donate">Invitar a un café</string>
+    <string name="no_browser_error">Ninguna aplicación puede abrir este enlace</string>
+    <string name="version">Versión</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

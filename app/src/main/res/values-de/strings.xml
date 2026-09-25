@@ -36,6 +36,11 @@
     <string name="play_sound_preview">Klangvorschau abspielen</string>
     <string name="play_sound_preview_summary">Beim Loslassen des Reglers einen Beispielton in der gewählten Lautstärke abspielen</string>
 
+    <string name="github_star">Auf GitHub mit Stern markieren</string>
+    <string name="donate">Einen Kaffee ausgeben</string>
+    <string name="no_browser_error">Keine App kann diesen Link öffnen</string>
+    <string name="version">Version</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

@@ -36,6 +36,11 @@
     <string name="play_sound_preview">Riproduci un\'anteprima sonora</string>
     <string name="play_sound_preview_summary">Riproduci un suono di esempio al livello selezionato quando il cursore viene rilasciato</string>
 
+    <string name="github_star">Metti una stella su GitHub</string>
+    <string name="donate">Offrimi un caffè</string>
+    <string name="no_browser_error">Nessuna applicazione può aprire questo link</string>
+    <string name="version">Versione</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

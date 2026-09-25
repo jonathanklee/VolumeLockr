@@ -35,6 +35,11 @@
     <string name="play_sound_preview">Воспроизводить образец звука</string>
     <string name="play_sound_preview_summary">Воспроизводить образец звука на выбранном уровне при отпускании ползунка</string>
 
+    <string name="github_star">Поставить звезду на GitHub</string>
+    <string name="donate">Купить мне кофе</string>
+    <string name="no_browser_error">Нет приложения для открытия этой ссылки</string>
+    <string name="version">Версия</string>
+
     <string name="aboutLibraries_description_text">VolumeLockr</string>
 
 </resources>

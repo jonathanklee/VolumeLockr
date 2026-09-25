@@ -1,6 +1,8 @@
 package com.klee.volumelockr.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -16,6 +19,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
+import com.klee.volumelockr.BuildConfig
 import com.klee.volumelockr.R
 import com.klee.volumelockr.service.VolumeService
 import java.io.IOException
@@ -29,6 +33,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val PASSWORD_CHANGE_PREFERENCE = "password"
         const val ALLOW_LOWER_PREFERENCE = "allow_lower"
         const val PLAY_SOUND_PREVIEW_PREFERENCE = "play_sound_preview"
+        const val GITHUB_STAR_PREFERENCE = "github_star"
+        const val DONATE_PREFERENCE = "donate"
+        const val VERSION_PREFERENCE = "version"
         const val DELAY_IN_MS = 100L
         const val MIN_PASSWORD_LENGTH = 6
         private const val ENCRYPTED_PREFS_FILE = "secure_settings"
@@ -68,6 +75,40 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         passwordProtected.isEnabled = isPasswordSet()
+
+        setupLinkPreferences()
+        setupVersionPreference()
+    }
+
+    private fun setupLinkPreferences() {
+        findPreference<Preference>(GITHUB_STAR_PREFERENCE)?.setOnPreferenceClickListener {
+            openUrl(getString(R.string.github_url))
+            true
+        }
+
+        findPreference<Preference>(DONATE_PREFERENCE)?.setOnPreferenceClickListener {
+            openUrl(getString(R.string.donate_url))
+            true
+        }
+    }
+
+    private fun setupVersionPreference() {
+        findPreference<Preference>(VERSION_PREFERENCE)?.let { version ->
+            version.summary = BuildConfig.VERSION_NAME
+            version.setOnPreferenceClickListener {
+                (requireActivity() as MainActivity).navigateToAbout()
+                true
+            }
+        }
+    }
+
+    private fun openUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "No activity can open $url", e)
+            Toast.makeText(context, R.string.no_browser_error, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initializeEncryptedPrefs() {
