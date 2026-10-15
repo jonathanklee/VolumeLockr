@@ -1,9 +1,12 @@
 package com.klee.volumelockr.ui
 
+import android.Manifest
 import android.app.NotificationManager
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
+    private val notificationPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -28,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNavigation()
         setupWindowInsets()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermission()
+        }
     }
 
     override fun onResume() {
@@ -54,6 +64,18 @@ class MainActivity : AppCompatActivity() {
 
         val navView: NavigationBarView? = binding.bottomNavigation ?: binding.navigationRail
         navView?.setupWithNavController(navController)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        val isGranted = checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+
+        if (isGranted) {
+            return
+        }
+
+        notificationPermissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

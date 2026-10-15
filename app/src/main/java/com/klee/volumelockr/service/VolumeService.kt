@@ -290,15 +290,9 @@ class VolumeService : Service() {
     @Synchronized
     fun tryShowNotification() {
         createNotificationChannel()
-        val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(NOTIFICATION_TITLE)
-            .setContentText(NOTIFICATION_DESCRIPTION)
-            .setSmallIcon(R.drawable.ic_volumelockr_foreground)
-            .setContentIntent(createNotificationContentIntent())
-            .build()
 
         try {
-            startForeground(NOTIFICATION_ID, notification)
+            startForeground(NOTIFICATION_ID, buildNotification())
             mIsForegroundStartPending = false
         } catch (error: IllegalStateException) {
             if (!isForegroundStartRestriction(error)) {
@@ -308,6 +302,22 @@ class VolumeService : Service() {
             Log.w(TAG, "Foreground start refused, retrying when the app comes back", error)
             mIsForegroundStartPending = true
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun buildNotification(): Notification {
+        val builder = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(NOTIFICATION_TITLE)
+            .setContentText(NOTIFICATION_DESCRIPTION)
+            .setSmallIcon(R.drawable.ic_volumelockr_foreground)
+            .setContentIntent(createNotificationContentIntent())
+            .setOngoing(true)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            builder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE)
+        }
+
+        return builder.build()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
