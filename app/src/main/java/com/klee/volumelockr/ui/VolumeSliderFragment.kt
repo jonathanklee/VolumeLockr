@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.klee.volumelockr.R
 import com.klee.volumelockr.databinding.FragmentVolumeSliderBinding
+import com.klee.volumelockr.service.VolumeLockStore
 import com.klee.volumelockr.service.VolumeService
 import com.klee.volumelockr.sound.VolumePreviewPlayer
 
@@ -40,10 +41,18 @@ class VolumeSliderFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        restoreServiceIfLocked()
         mService?.let {
             handleServiceConnected()
         } ?: Intent(context, VolumeService::class.java).also { intent ->
             context?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    private fun restoreServiceIfLocked() {
+        val context = context ?: return
+        if (VolumeLockStore(context).hasLocks()) {
+            VolumeService.start(context)
         }
     }
 

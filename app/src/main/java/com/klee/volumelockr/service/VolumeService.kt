@@ -20,10 +20,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.klee.volumelockr.R
 import com.klee.volumelockr.ui.MainActivity
 import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER_PREFERENCE
@@ -38,8 +35,6 @@ class VolumeService : Service() {
         const val NOTIFICATION_DESCRIPTION = "Service is running in background"
         const val NOTIFICATION_CHANNEL_ID = "VolumeService"
         const val NOTIFICATION_ID = 4455
-        const val APP_SHARED_PREFERENCES = "volumelockr_shared_preferences"
-        const val LOCKS_KEY = "locks_key"
 
         const val VOLUME_MUSIC_SPEAKER_SETTING = "volume_music_speaker"
         const val VOLUME_MUSIC_HEADSET_SETTING = "volume_music_headset"
@@ -59,16 +54,21 @@ class VolumeService : Service() {
 
         fun start(context: Context) {
             val service = Intent(context, VolumeService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(service)
-            } else {
-                context.startService(service)
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(service)
+                } else {
+                    context.startService(service)
+                }
+            } catch (error: IllegalStateException) {
+                Log.w(TAG, "Cannot start the service while in background", error)
             }
         }
     }
 
     private lateinit var mAudioManager: AudioManager
     private lateinit var mVolumeProvider: VolumeProvider
+    private lateinit var mLockStore: VolumeLockStore
     private var mVolumeListenerHandler: Handler? = null
     private var mVolumeListener: (() -> Unit)? = null
     private var mModeListener: (() -> Unit)? = null
@@ -77,6 +77,7 @@ class VolumeService : Service() {
     private var mMode: Int = 2
     private var mLockingThread: HandlerThread? = null
     private var mLockingHandler: Handler? = null
+    private var mIsForegroundStartPending = false
     private var mAllowLower = false
     private var mAllowLowerListener: (() -> Unit)? = null
 
@@ -85,8 +86,8 @@ class VolumeService : Service() {
 
         mAudioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         mVolumeProvider = VolumeProvider(this)
-
-        loadPreferences()
+        mLockStore = VolumeLockStore(this)
+        mVolumeLock = mLockStore.load()
 
         registerObservers()
 
@@ -99,7 +100,10 @@ class VolumeService : Service() {
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
             }
             stopSelf()
+            return
         }
+
+        startLocking()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -107,6 +111,10 @@ class VolumeService : Service() {
         mAllowLower = sharedPreferences.getBoolean(ALLOW_LOWER_PREFERENCE, false)
 
         mMode = Settings.Global.getInt(contentResolver, MODE_RINGER_SETTING)
+
+        if (mIsForegroundStartPending && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tryShowNotification()
+        }
 
         return START_STICKY
     }
@@ -191,22 +199,7 @@ class VolumeService : Service() {
     }
 
     private fun savePreferences() {
-        val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
-        sharedPreferences.edit {
-            putString(LOCKS_KEY, Gson().toJson(mVolumeLock))
-        }
-    }
-
-    private fun loadPreferences() {
-        val sharedPreferences = getSharedPreferences(APP_SHARED_PREFERENCES, MODE_PRIVATE)
-        class Token : TypeToken<HashMap<Int, Int>>()
-        val value = sharedPreferences.getString(LOCKS_KEY, "")
-        if (value.isNullOrBlank()) {
-            return
-        }
-
-        mVolumeLock = Gson().fromJson(value, Token().type)
-        startLocking()
+        mLockStore.save(mVolumeLock)
     }
 
     @WorkerThread
@@ -306,12 +299,14 @@ class VolumeService : Service() {
 
         try {
             startForeground(NOTIFICATION_ID, notification)
+            mIsForegroundStartPending = false
         } catch (error: IllegalStateException) {
             if (!isForegroundStartRestriction(error)) {
                 throw error
             }
 
-            stopSelf()
+            Log.w(TAG, "Foreground start refused, retrying when the app comes back", error)
+            mIsForegroundStartPending = true
         }
     }
 
