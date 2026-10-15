@@ -13,9 +13,11 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
@@ -26,12 +28,12 @@ import com.klee.volumelockr.R
 import com.klee.volumelockr.ui.MainActivity
 import com.klee.volumelockr.ui.SettingsFragment.Companion.ALLOW_LOWER_PREFERENCE
 import com.klee.volumelockr.ui.Volume
-import java.util.Timer
-import java.util.TimerTask
 
 class VolumeService : Service() {
 
     companion object {
+        private const val TAG = "VolumeService"
+        private const val LOCKING_THREAD_NAME = "VolumeLocking"
         const val NOTIFICATION_TITLE = "VolumeLockr"
         const val NOTIFICATION_DESCRIPTION = "Service is running in background"
         const val NOTIFICATION_CHANNEL_ID = "VolumeService"
@@ -73,7 +75,8 @@ class VolumeService : Service() {
     private val mBinder = LocalBinder()
     private var mVolumeLock = HashMap<Int, Int>()
     private var mMode: Int = 2
-    private var mTimer: Timer? = null
+    private var mLockingThread: HandlerThread? = null
+    private var mLockingHandler: Handler? = null
     private var mAllowLower = false
     private var mAllowLowerListener: (() -> Unit)? = null
 
@@ -112,27 +115,42 @@ class VolumeService : Service() {
 
     @Synchronized
     fun startLocking() {
-        if (mTimer != null) {
+        if (mLockingHandler != null) {
             return
         }
 
-        mTimer = Timer()
-        mTimer?.scheduleAtFixedRate(
-            object : TimerTask() {
-                override fun run() {
-                    checkVolumes()
-                }
-            },
-            0,
-            PERIOD_IN_MS
-        )
+        val thread = HandlerThread(LOCKING_THREAD_NAME)
+        thread.start()
+        mLockingThread = thread
+
+        val handler = Handler(thread.looper)
+        mLockingHandler = handler
+        handler.post { runLockingPass(handler) }
     }
 
     @Synchronized
     fun stopLocking() {
-        mTimer?.cancel()
-        mTimer = null
+        mLockingHandler?.removeCallbacksAndMessages(null)
+        mLockingHandler = null
+
+        mLockingThread?.quitSafely()
+        mLockingThread = null
     }
+
+    private fun runLockingPass(handler: Handler) {
+        runCatching {
+            checkVolumes()
+        }.onFailure {
+            Log.w(TAG, "Volume enforcement pass failed", it)
+        }
+
+        if (isCurrentLockingHandler(handler)) {
+            handler.postDelayed({ runLockingPass(handler) }, PERIOD_IN_MS)
+        }
+    }
+
+    @Synchronized
+    private fun isCurrentLockingHandler(handler: Handler): Boolean = mLockingHandler === handler
 
     fun registerOnVolumeChangeListener(handler: Handler, listener: () -> Unit) {
         mVolumeListenerHandler = handler
